@@ -107,7 +107,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (isCollidedWithEnemy(enemies.get(iter))) {
                 if(heroRect.bottom < enemies.get(iter).getRect().bottom) {
                     hero.bounceUp();
-                    enemies.remove(iter);
+                    enemies.get(iter).setLives(enemies.get(iter).getLives()-1);
+                    if(enemies.get(iter).getLives() == 1)
+                        enemies.get(iter).fall();
+                    else
+                        enemies.remove(iter); //enemy death
                 }else{
 
                 }
