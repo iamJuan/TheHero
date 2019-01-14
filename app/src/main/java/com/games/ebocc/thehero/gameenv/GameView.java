@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.enemyballoons.Enemy;
 import com.games.ebocc.thehero.util.HeroPos;
 import com.games.ebocc.thehero.util.MainThread;
@@ -59,16 +58,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         clouds = new Cloud[3];
         enemies = new ArrayList<>();
 
-        clouds[0] = new Cloud(BitmapFactory.decodeResource(getResources(),R.drawable.cloud1), 0, 1100);
-        clouds[1] = new Cloud(BitmapFactory.decodeResource(getResources(),R.drawable.cloud1), 1200, 600);
-        clouds[2] = new Cloud(BitmapFactory.decodeResource(getResources(),R.drawable.cloud1), 2200, 1100);
+        clouds[0] = new Cloud(0, 1100, this);
+        clouds[1] = new Cloud(1200, 600, this);
+        clouds[2] = new Cloud(2200, 1100, this);
 
-        hero = new Hero(BitmapFactory.decodeResource(getResources(),R.drawable.bidaright), 0, 950);
+        hero = new Hero(0, 950, this);
 
-        enemies.add(new Enemy(BitmapFactory.decodeResource(getResources(),R.drawable.enemyleft), 1200, 500, this));
+        enemies.add(new Enemy(1200, 500, this));
         heroPos.addObserver(enemies.get(0));
 
-        enemies.add(new Enemy(BitmapFactory.decodeResource(getResources(),R.drawable.enemyleft), 2200, 1000, this));
+        enemies.add(new Enemy(2200, 1000, this));
         heroPos.addObserver(enemies.get(1));
     }
 
@@ -192,17 +191,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void gameStart(){
         for(int enemyIter = 0; enemyIter < enemies.size(); enemyIter++){
             enemies.get(enemyIter).run();
-        }
-    }
-
-    public void changeWhereHeroIsFacing(int facing){
-        switch (facing){
-            case GO_RIGHT:
-                hero = new Hero(BitmapFactory.decodeResource(getResources(),R.drawable.bidaright), hero.getX(), hero.getY());
-                break;
-            case GO_LEFT:
-                hero = new Hero(BitmapFactory.decodeResource(getResources(),R.drawable.bidaleft), hero.getX(), hero.getY());
-                break;
         }
     }
 

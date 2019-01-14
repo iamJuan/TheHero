@@ -2,6 +2,10 @@ package com.games.ebocc.thehero.gameenv;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.SurfaceView;
+
+import com.games.ebocc.thehero.R;
 
 public class Hero extends GameObjects{
 
@@ -10,8 +14,9 @@ public class Hero extends GameObjects{
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-    public Hero(Bitmap bitmap, int left, int top) {
-        super(bitmap, left, top);
+    public Hero(int left, int top, SurfaceView view) {
+        super(left, top, view);
+        this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
     }
 
     public void goUp(){
@@ -30,10 +35,12 @@ public class Hero extends GameObjects{
 
     public void goRight(){
         x += xVelocity;
+        this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
     }
 
     public void goLeft() {
         x -= xVelocity;
+        this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
     }
 
     public void bounceUp(){

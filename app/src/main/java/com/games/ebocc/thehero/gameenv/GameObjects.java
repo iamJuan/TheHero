@@ -3,19 +3,21 @@ package com.games.ebocc.thehero.gameenv;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.view.SurfaceView;
 
 public class GameObjects {
 
     protected Bitmap image;
     protected int x;
     protected int y;
+    protected SurfaceView view;
 
     protected Rect rect;
 
-    public GameObjects(Bitmap bitmap, int left, int top) {
+    public GameObjects(int left, int top, SurfaceView view) {
         this.x = left;
         this.y = top;
-        this.image = bitmap;
+        this.view = view;
         rect = new Rect();
     }
 

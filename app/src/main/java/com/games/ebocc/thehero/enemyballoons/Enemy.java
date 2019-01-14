@@ -30,19 +30,15 @@ public class Enemy extends GameObjects implements Runnable{
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-    public Enemy(Bitmap bitmap, int left, int top, SurfaceView view) {
-        super(bitmap, left, top);
+    public Enemy(int left, int top, SurfaceView view) {
+        super(left, top, view);
         this.view = view;
+        this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
 
         targetX = new Random().nextInt(screenWidth);
         targetY = new Random().nextInt(screenHeight - 400);
         rectTarget = new Rect();
         rectTarget.set(targetX, targetY,targetX+100, targetY+100);
-    }
-
-    public void updateHeroPosition(int heroX, int heroY){
-        this.heroX = heroX;
-        this.heroY = heroY;
     }
 
     public void goOpposite(){
@@ -62,6 +58,11 @@ public class Enemy extends GameObjects implements Runnable{
         rectTarget.set(targetX, targetY, targetX + 100, targetY + 100);
     }
 
+    public void updateHeroPosition(int heroX, int heroY){
+        this.heroX = heroX;
+        this.heroY = heroY;
+    }
+
     @Override
     public void run() {
         if (Rect.intersects(rect, rectTarget)) {
@@ -71,11 +72,11 @@ public class Enemy extends GameObjects implements Runnable{
             rectTarget.set(targetX, targetY, targetX + 100, targetY + 100);
         } else {
             if (x >= targetX) {
-                image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
+                this.image = BitmapFactory.decodeResource(this.view.getResources(), R.drawable.enemyleft);
                 x -= xVelocity;
                 isFacingLeft = true;
             } else if (x < targetX) {
-                image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
+                this.image = BitmapFactory.decodeResource(this.view.getResources(), R.drawable.enemyright);
                 x += xVelocity;
                 isFacingLeft = false;
             }

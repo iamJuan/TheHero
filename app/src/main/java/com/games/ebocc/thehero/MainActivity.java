@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private final int NO_DIRECTION = 0;
     private final int GO_LEFT = 1;
     private final int GO_RIGHT = 2;
+    private Button rightButton;
+    private Button leftButton;
 
     @SuppressLint("ResourceType")
     @Override
@@ -32,51 +34,18 @@ public class MainActivity extends AppCompatActivity {
 
         buttons = new RelativeLayout(this);
 
-        Button rightButton = new Button(this);
+        rightButton = new Button(this);
         rightButton.setText(">");
         rightButton.setId(21690);
 
-        Button leftButton = new Button(this);
+        leftButton = new Button(this);
         leftButton.setText("<");
         leftButton.setId(92188);
 
         gameView.maneuverHero(NO_DIRECTION);
 
-        leftButton.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        gameView.changeWhereHeroIsFacing(GO_LEFT);
-                        gameView.maneuverHero(GO_LEFT);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        gameView.maneuverHero(NO_DIRECTION);
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        rightButton.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        gameView.changeWhereHeroIsFacing(GO_RIGHT);
-                        gameView.maneuverHero(GO_RIGHT);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        gameView.maneuverHero(NO_DIRECTION);
-                        break;
-                }
-
-                return false;
-            }
-        });
+        leftButton.setOnTouchListener(new ButtonListener());
+        rightButton.setOnTouchListener(new ButtonListener());
 
         RelativeLayout.LayoutParams b1 = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -104,5 +73,33 @@ public class MainActivity extends AppCompatActivity {
         game.addView(buttons);
 
         setContentView(game);
+    }
+
+    private class ButtonListener implements View.OnTouchListener{
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if(view.getId() == leftButton.getId()){
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        gameView.maneuverHero(GO_LEFT);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        gameView.maneuverHero(NO_DIRECTION);
+                        break;
+                }
+            }else if(view.getId() == rightButton.getId()){
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        gameView.maneuverHero(GO_RIGHT);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        gameView.maneuverHero(NO_DIRECTION);
+                        break;
+                }
+
+            }
+            return false;
+        }
     }
 }
