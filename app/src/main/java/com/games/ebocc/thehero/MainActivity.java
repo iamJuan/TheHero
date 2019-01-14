@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.games.ebocc.thehero.gameenv.GameView;
+import com.games.ebocc.thehero.gameenv.Hero;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private final int GO_RIGHT = 2;
     private Button rightButton;
     private Button leftButton;
+
+    private Hero hero;
 
     @SuppressLint("ResourceType")
     @Override
@@ -42,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
         leftButton.setText("<");
         leftButton.setId(92188);
 
-        gameView.maneuverHero(NO_DIRECTION);
+        hero = gameView.getHero();
+
+        hero.maneuverHero(NO_DIRECTION);
 
         leftButton.setOnTouchListener(new ButtonListener());
         rightButton.setOnTouchListener(new ButtonListener());
@@ -82,19 +87,19 @@ public class MainActivity extends AppCompatActivity {
             if(view.getId() == leftButton.getId()){
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        gameView.maneuverHero(GO_LEFT);
+                        hero.maneuverHero(GO_LEFT);
                         break;
                     case MotionEvent.ACTION_UP:
-                        gameView.maneuverHero(NO_DIRECTION);
+                        hero.maneuverHero(NO_DIRECTION);
                         break;
                 }
             }else if(view.getId() == rightButton.getId()){
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        gameView.maneuverHero(GO_RIGHT);
+                        hero.maneuverHero(GO_RIGHT);
                         break;
                     case MotionEvent.ACTION_UP:
-                        gameView.maneuverHero(NO_DIRECTION);
+                        hero.maneuverHero(NO_DIRECTION);
                         break;
                 }
 

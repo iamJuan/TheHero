@@ -25,12 +25,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private HeroPos heroPos;
 
     private boolean isGoingUp = false;
-    private boolean isGoingRight = false;
-    private boolean hasDirection = false;
-
-    private final int NO_DIRECTION = 0;
-    private final int GO_LEFT = 1;
-    private final int GO_RIGHT = 2;
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
@@ -43,7 +37,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
 
         thread = new MainThread(getHolder(), this);
+
+        hero = new Hero(0, 950, this);
+
         heroPos = new HeroPos();
+
+        clouds = new Cloud[3];
+        enemies = new ArrayList<>();
+
+        clouds[0] = new Cloud(0, 1100, this);
+        clouds[1] = new Cloud(1200, 600, this);
+        clouds[2] = new Cloud(2200, 1100, this);
+
+        enemies.add(new Enemy(1200, 300, this));
+        heroPos.addObserver(enemies.get(0));
+
+        enemies.add(new Enemy(2200, 950, this));
+        heroPos.addObserver(enemies.get(1));
 
         setFocusable(true);
         getHolder().addCallback(this);
@@ -53,21 +63,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         thread.setRunning(true);
         thread.start();
-
-        clouds = new Cloud[3];
-        enemies = new ArrayList<>();
-
-        clouds[0] = new Cloud(0, 1100, this);
-        clouds[1] = new Cloud(1200, 600, this);
-        clouds[2] = new Cloud(2200, 1100, this);
-
-        hero = new Hero(0, 950, this);
-
-        enemies.add(new Enemy(1200, 300, this));
-        heroPos.addObserver(enemies.get(0));
-
-        enemies.add(new Enemy(2200, 950, this));
-        heroPos.addObserver(enemies.get(1));
     }
 
     @Override
@@ -178,32 +173,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
     //----------------------collision------------------
 
-    public void direction(){
-        if(hasDirection) {
-            if (isGoingRight)
-                hero.goRight();
-            else
-                hero.goLeft();
-        }
-    }
-
-    public void maneuverHero(int direction){
-        switch (direction){
-            case GO_RIGHT:
-                isGoingRight = true;
-                hasDirection = true;
-                break;
-            case GO_LEFT:
-                isGoingRight = false;
-                hasDirection = true;
-                break;
-            case NO_DIRECTION:
-                hasDirection = false;
-                break;
-
-        }
-    }
-
     public void gameStart(){
         for(int enemyIter = 0; enemyIter < enemies.size(); enemyIter++){
             enemies.get(enemyIter).run();
@@ -222,5 +191,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
         }
         return true;
+    }
+
+    public Hero getHero() {
+        return hero;
     }
 }

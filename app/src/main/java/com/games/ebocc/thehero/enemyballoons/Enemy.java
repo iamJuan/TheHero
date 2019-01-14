@@ -45,17 +45,17 @@ public class Enemy extends GameEntities implements Runnable{
 
     @Override
     public void run() {
-        if(Rect.intersects(rect, rectTarget)){
-            int tx = new Random().nextInt(screenWidth);
-            int ty = new Random().nextInt(screenHeight - 400);
+            if (Rect.intersects(rect, rectTarget) && !hasFallen) {
+                int tx = new Random().nextInt(screenWidth);
+                int ty = new Random().nextInt(screenHeight - 400);
 
-            if(!hasFallen && hasCollidedWithFriend) {
-                hasCollidedWithFriend = false;
-            }else if(!hasFallen && hasCollidedWithCloud) {
-                hasCollidedWithCloud = false;
+                if (!hasFallen && hasCollidedWithFriend) {
+                    hasCollidedWithFriend = false;
+                } else if (!hasFallen && hasCollidedWithCloud) {
+                    hasCollidedWithCloud = false;
+                }
+                createTargetPos(tx, ty);
             }
-            createTargetPos(tx, ty);
-        }
 
         goToTarget();
     }
@@ -68,14 +68,18 @@ public class Enemy extends GameEntities implements Runnable{
     }
 
     private void goToTarget() {
-        if (x >= targetX) {
+        if (x > targetX + 50) {
             x -= xVelocity;
-            isFacingLeft = true;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
-        } else if (x < targetX) {
+            if(!hasFallen) {
+                isFacingLeft = true;
+                image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
+            }
+        } else if (x < targetX - 50) {
             x += xVelocity;
-            isFacingLeft = false;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
+            if(!hasFallen) {
+                isFacingLeft = false;
+                image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
+            }
         }
 
         if (y > targetY) {
@@ -86,19 +90,21 @@ public class Enemy extends GameEntities implements Runnable{
     }
 
     public void goOpposite(){
-        int tx;
-        if(isFacingLeft) {
-            tx = x - 500;
-            isFacingLeft = false;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
-        }else{
-            tx = x + 500;
-            isFacingLeft = true;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
-        }
+        if(!hasFallen){
+            int tx;
+            if(isFacingLeft) {
+                tx = x - 500;
+                isFacingLeft = false;
+                image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
+            }else{
+                tx = x + 500;
+                isFacingLeft = true;
+                image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
+            }
 
-        int ty = new Random().nextInt(screenHeight  - 400);
-        createTargetPos(tx, ty);
+            int ty = new Random().nextInt(screenHeight  - 400);
+            createTargetPos(tx, ty);
+        }
     }
 
     public void updateHeroPosition(int heroX, int heroY){
