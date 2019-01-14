@@ -5,7 +5,7 @@ import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
 
-public class Cloud extends GameObjects{
+public class Cloud extends GameEntities {
 
     public Cloud(int left, int top, SurfaceView view) {
         super(left, top, view);

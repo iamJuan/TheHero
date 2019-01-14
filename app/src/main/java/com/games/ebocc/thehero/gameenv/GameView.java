@@ -2,7 +2,6 @@ package com.games.ebocc.thehero.gameenv;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.Log;
@@ -64,10 +63,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         hero = new Hero(0, 950, this);
 
-        enemies.add(new Enemy(1200, 500, this));
+        enemies.add(new Enemy(1200, 300, this));
         heroPos.addObserver(enemies.get(0));
 
-        enemies.add(new Enemy(2200, 1000, this));
+        enemies.add(new Enemy(2200, 950, this));
         heroPos.addObserver(enemies.get(1));
     }
 
@@ -117,6 +116,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
             isEnemyCollidedWithEnemy(enemies.get(iter));
+            isCollidedWithCloud(enemies.get(iter));
         }
     }
 
@@ -145,7 +145,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             heroPos.notifyEnemies(heroRect.left, heroRect.top);
         }
     }
-
+    //----------------------collision------------------
     private boolean isCollidedWithEnemy(Enemy enemy) {
         boolean hasCollided = false;
 
@@ -160,11 +160,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         for(int enemyIter = 0; enemyIter < enemies.size(); enemyIter++){
             if(enemy.getRect().intersect(enemies.get(enemyIter).getRect()) && !enemy.equals(enemies.get(enemyIter))){
+                enemy.setHasCollidedWithFriend(true);
                 enemy.goOpposite();
+                enemies.get(enemyIter).setHasCollidedWithFriend(true);
                 enemies.get(enemyIter).goOpposite();
             }
         }
     }
+
+    private void isCollidedWithCloud(Enemy enemy) {
+        Rect enemyRect = enemy.getRect();
+        if(Rect.intersects(enemyRect, cloudRect2)) {
+            enemy.goOpposite();
+            enemy.setHasCollidedWithCloud(true);
+            Log.d("collided with cloud", "true");
+        }
+    }
+    //----------------------collision------------------
 
     public void direction(){
         if(hasDirection) {

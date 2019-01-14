@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.SurfaceView;
 
-public class GameObjects {
+public class GameEntities {
 
     protected Bitmap image;
     protected int x;
@@ -14,7 +14,7 @@ public class GameObjects {
 
     protected Rect rect;
 
-    public GameObjects(int left, int top, SurfaceView view) {
+    public GameEntities(int left, int top, SurfaceView view) {
         this.x = left;
         this.y = top;
         this.view = view;

@@ -1,13 +1,12 @@
 package com.games.ebocc.thehero.gameenv;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
 
-public class Hero extends GameObjects{
+public class Hero extends GameEntities {
 
     private int xVelocity = 8;
     private int yVelocity = 5;

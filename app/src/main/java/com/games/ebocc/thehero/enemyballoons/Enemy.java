@@ -1,18 +1,16 @@
 package com.games.ebocc.thehero.enemyballoons;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
-import com.games.ebocc.thehero.gameenv.GameObjects;
+import com.games.ebocc.thehero.gameenv.GameEntities;
 
 import java.util.Random;
 
-public class Enemy extends GameObjects implements Runnable{
+public class Enemy extends GameEntities implements Runnable{
 
     private SurfaceView view;
 
@@ -20,6 +18,10 @@ public class Enemy extends GameObjects implements Runnable{
     private int heroY;
 
     private boolean isFacingLeft = false;
+    private boolean hasFallen = false;
+
+    private boolean hasCollidedWithFriend = false;
+    private boolean hasCollidedWithCloud = false;
 
     private int targetX;
     private int targetY;
@@ -30,34 +32,73 @@ public class Enemy extends GameObjects implements Runnable{
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
     private int lives = 2;
-    private boolean hasFallen = false;
 
     public Enemy(int left, int top, SurfaceView view) {
         super(left, top, view);
         this.view = view;
         this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
 
-        targetX = new Random().nextInt(screenWidth);
-        targetY = new Random().nextInt(screenHeight - 400);
+        int tx = new Random().nextInt(screenWidth);
+        int ty = new Random().nextInt(screenHeight - 400);
+        createTargetPos(tx, ty);
+    }
+
+    @Override
+    public void run() {
+        if(Rect.intersects(rect, rectTarget)){
+            int tx = new Random().nextInt(screenWidth);
+            int ty = new Random().nextInt(screenHeight - 400);
+
+            if(!hasFallen && hasCollidedWithFriend) {
+                hasCollidedWithFriend = false;
+            }else if(!hasFallen && hasCollidedWithCloud) {
+                hasCollidedWithCloud = false;
+            }
+            createTargetPos(tx, ty);
+        }
+
+        goToTarget();
+    }
+
+    private void createTargetPos(int tx, int ty) {
+        targetX = tx;
+        targetY = ty;
         rectTarget = new Rect();
         rectTarget.set(targetX, targetY,targetX+100, targetY+100);
     }
 
+    private void goToTarget() {
+        if (x >= targetX) {
+            x -= xVelocity;
+            isFacingLeft = true;
+            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
+        } else if (x < targetX) {
+            x += xVelocity;
+            isFacingLeft = false;
+            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
+        }
+
+        if (y > targetY) {
+            y -= yVelocity;
+        } else if (y < targetY) {
+            y += yVelocity;
+        }
+    }
+
     public void goOpposite(){
-        Log.d("run", ""+isFacingLeft);
+        int tx;
         if(isFacingLeft) {
-            targetX = x - 500;
+            tx = x - 500;
             isFacingLeft = false;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
         }else{
-            targetX = x + 500;
+            tx = x + 500;
             isFacingLeft = true;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
         }
 
-        targetY = new Random().nextInt(screenHeight  - 400);
-        rectTarget = new Rect();
-        rectTarget.set(targetX, targetY, targetX + 100, targetY + 100);
+        int ty = new Random().nextInt(screenHeight  - 400);
+        createTargetPos(tx, ty);
     }
 
     public void updateHeroPosition(int heroX, int heroY){
@@ -65,38 +106,11 @@ public class Enemy extends GameObjects implements Runnable{
         this.heroY = heroY;
     }
 
-    @Override
-    public void run() {
-        if (Rect.intersects(rect, rectTarget) && !hasFallen) {
-            targetX = new Random().nextInt(screenWidth);
-            targetY = new Random().nextInt(screenHeight  - 400);
-            rectTarget = new Rect();
-            rectTarget.set(targetX, targetY, targetX + 100, targetY + 100);
-        } else {
-            if (x >= targetX) {
-                this.image = BitmapFactory.decodeResource(this.view.getResources(), R.drawable.enemyleft);
-                x -= xVelocity;
-                isFacingLeft = true;
-            } else if (x < targetX) {
-                this.image = BitmapFactory.decodeResource(this.view.getResources(), R.drawable.enemyright);
-                x += xVelocity;
-                isFacingLeft = false;
-            }
-
-            if (y > targetY) {
-                y -= yVelocity;
-            } else if (y < targetY) {
-                y += yVelocity;
-            }
-        }
-    }
-
     public void fall() {
         hasFallen = true;
-        targetX = x;
-        targetY = screenHeight  - 400;
-        rectTarget = new Rect();
-        rectTarget.set(targetX, targetY, targetX + 100, targetY + 100);
+        int tx = x;
+        int ty = screenHeight  - 400;
+        createTargetPos(tx, ty);
     }
 
     public int getLives() {
@@ -105,5 +119,13 @@ public class Enemy extends GameObjects implements Runnable{
 
     public void setLives(int lives) {
         this.lives = lives;
+    }
+
+    public void setHasCollidedWithFriend(boolean hasCollidedWithFriend) {
+        this.hasCollidedWithFriend = hasCollidedWithFriend;
+    }
+
+    public void setHasCollidedWithCloud(boolean hasCollidedWithCloud) {
+        this.hasCollidedWithCloud = hasCollidedWithCloud;
     }
 }
