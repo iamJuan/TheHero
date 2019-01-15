@@ -42,23 +42,21 @@ public class Hero extends GameEntities {
     public void goRight(){
         x += xVelocity;
         this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
+        if(x > screenWidth){
+            x = -100;
+        }
     }
 
     public void goLeft() {
         x -= xVelocity;
         this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
+        if(x < -100){
+            x = screenWidth;
+        }
     }
 
     public void bounceUp(){
         y -= (yVelocity + 100);
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public void direction(){
