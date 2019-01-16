@@ -9,7 +9,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.enemyballoons.Enemy;
-import com.games.ebocc.thehero.util.HeroPos;
 import com.games.ebocc.thehero.util.MainThread;
 
 import java.util.ArrayList;
@@ -18,49 +17,76 @@ import java.util.List;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread thread;
-    private Cloud clouds[];
+    private List<Cloud> clouds;
     private Hero hero;
     private List<Enemy> enemies;
-    private HeroPos heroPos;
 
     private boolean isGoingUp = false;
-    private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-    private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
     private Rect heroRect;
-    private Rect cloudRect1;
-    private Rect cloudRect2;
-    private Rect cloudRect3;
+
+    private int LEVEL = 1;
+
+    private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+    private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
     public GameView(Context context) {
         super(context);
 
         thread = new MainThread(getHolder(), this);
 
-        hero = new Hero(0, 950, this);
+        hero = new Hero(0, 800, this);
 
-        heroPos = new HeroPos();
-
-        clouds = new Cloud[3];
+        clouds = new ArrayList<>();
         enemies = new ArrayList<>();
 
-        clouds[0] = new Cloud(0, 1100, this);
-        clouds[1] = new Cloud(1200, 600, this);
-        clouds[2] = new Cloud(2200, 1100, this);
-
-        enemies.add(new Enemy(1200, 300, this));
-        heroPos.addObserver(enemies.get(0));
-
-        enemies.add(new Enemy(2200, 300, this));
-        heroPos.addObserver(enemies.get(1));
+        initStage(3);
 
         heroRect = hero.getRect();
-        cloudRect1 = clouds[0].getRect();
-        cloudRect2 = clouds[1].getRect();
-        cloudRect3 = clouds[2].getRect();
 
         setFocusable(true);
         getHolder().addCallback(this);
+    }
+
+    private void initStage(int level) {
+        switch(level){
+            case 1:
+                clouds.add(new Cloud(0, 1100, this));
+                clouds.add(new Cloud(1200, 600, this));
+                clouds.add(new Cloud(2200, 1100, this));
+
+                enemies.add(new Enemy(1200, 300, this));
+                enemies.add(new Enemy(2200, 300, this));
+                break;
+
+            case 2:
+                hero.setX(0);
+                hero.setY(800);
+                clouds.add(new Cloud(0, 1100, this));
+                clouds.add(new Cloud(800, screenHeight - 600, this));
+                clouds.add(new Cloud(1200, screenHeight - 600, this));
+                clouds.add(new Cloud(1600, screenHeight - 600, this));
+
+                enemies.add(new Enemy(800, screenHeight - 800, this));
+                enemies.add(new Enemy(1200, screenHeight - 800, this));
+                enemies.add(new Enemy(1600, screenHeight - 800, this));
+                break;
+
+            case 3:
+                hero.setX(0);
+                hero.setY(800);
+                clouds.add(new Cloud(0, 1100, this));
+                clouds.add(new Cloud(2200, screenHeight - 400, this));
+                clouds.add(new Cloud(1600, screenHeight - 700, this));
+                clouds.add(new Cloud(1000, screenHeight - 1000, this));
+                clouds.add(new Cloud(400, screenHeight - 1300, this));
+
+                enemies.add(new Enemy(2200, screenHeight - 600, this));
+                enemies.add(new Enemy(1600, screenHeight - 900, this));
+                enemies.add(new Enemy(1000, screenHeight - 1200, this));
+                enemies.add(new Enemy(400, screenHeight - 1500, this));
+                break;
+        }
     }
 
     @Override
@@ -92,27 +118,37 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (canvas != null) {
-            clouds[0].draw(canvas);
-            clouds[1].draw(canvas);
-            clouds[2].draw(canvas);
-            hero.draw(canvas);
+
+            for(int iter = 0; iter < clouds.size(); iter++) {
+                clouds.get(iter).draw(canvas);
+            }
+
             for(int iter = 0; iter < enemies.size(); iter++) {
                 enemies.get(iter).draw(canvas);
             }
+
+            hero.draw(canvas);
         }
 
         for(int iter = 0; iter < enemies.size(); iter++) {
             Enemy enemy = enemies.get(iter);
             if (hero.isCollidedWithEnemy(enemy)) {
-                if(enemy.getLives() == 0)
-                    enemies.remove(enemy); //enemy death
+                if(enemy.getLives() == 0) {
+                    enemies.remove(enemy);
+                }
             }
 
             enemy.isEnemyCollidedWithFriends(enemies);
+            enemy.isCollidedWithClouds(clouds);
         }
     }
 
     public void update() {
+        if(enemies.size() < 1){
+            clouds.clear();
+            LEVEL++;
+            initStage(LEVEL);
+        }
 
         if (!isGoingUp) {
             if (hero.cloudCollisionTop(clouds))
@@ -120,10 +156,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }else {
             if(hero.cloudCollisionBottom(clouds))
                 hero.goUp();
-        }
-
-        for(int enemyIter = 0; enemyIter < enemies.size(); enemyIter++){
-            heroPos.notifyEnemies(heroRect.left, heroRect.top);
         }
     }
 

@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 public class GameEntities {
 
     protected Bitmap image;
+
     protected int x;
     protected int y;
     protected SurfaceView view;
@@ -31,4 +32,13 @@ public class GameEntities {
         rect.set(x, y, x + image.getWidth(), y + image.getHeight());
         return rect;
     }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
 }

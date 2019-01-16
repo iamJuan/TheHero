@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
+import com.games.ebocc.thehero.gameenv.Cloud;
 import com.games.ebocc.thehero.gameenv.GameEntities;
 
 import java.util.List;
@@ -70,7 +71,7 @@ public class Enemy extends GameEntities implements Runnable{
 
     private Rect justTravel() {
         targetX = new Random().nextInt(screenWidth);
-        targetY = new Random().nextInt(screenHeight - 400);
+        targetY = new Random().nextInt(screenHeight - 500);
         Rect rectTravel = new Rect();
         rectTravel.set(targetX, targetY,targetX+100, targetY+100);
 
@@ -95,6 +96,10 @@ public class Enemy extends GameEntities implements Runnable{
         return rectTravel;
     }
 
+    public void fall(){
+        targetTravel = fallTravel();
+    }
+
     public Rect fallTravel() {
         hasFallen = true;
         targetX = x;
@@ -116,9 +121,10 @@ public class Enemy extends GameEntities implements Runnable{
         }
     }
 
-    public void updateHeroPosition(int heroX, int heroY){
-        this.heroX = heroX;
-        this.heroY = heroY;
+    public void isCollidedWithClouds(List<Cloud> clouds) {
+        if(getRect().intersect(clouds.get(1).getRect())){
+            targetTravel = oppositeTravel();
+        }
     }
 
     public int getLives() {

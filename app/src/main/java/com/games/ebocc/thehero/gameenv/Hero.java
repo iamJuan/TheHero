@@ -8,6 +8,8 @@ import android.view.SurfaceView;
 import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.enemyballoons.Enemy;
 
+import java.util.List;
+
 public class Hero extends GameEntities {
 
     private int xVelocity = 8;
@@ -92,27 +94,27 @@ public class Hero extends GameEntities {
             bounceUp();
             enemy.setLives(enemy.getLives()-1);
             if(enemy.getLives() == 1)
-                enemy.fallTravel();
+                enemy.fall();
             return true;
         }
         return false;
     }
 
-    public boolean cloudCollisionTop(Cloud[] clouds){
-        if((!Rect.intersects(getRect(), clouds[0].getRect()) || getRect().bottom < clouds[0].getRect().top + 100)
-                && (!Rect.intersects(getRect(), clouds[2].getRect()) || getRect().bottom < clouds[2].getRect().top + 100)
-                && ((getRect().right < clouds[1].getRect().right - (clouds[1].getRect().right - clouds[1].getRect().left) || getRect().left > clouds[1].getRect().right)
-                || (getRect().left < clouds[1].getRect().right && getRect().right > clouds[1].getRect().left && getRect().bottom < clouds[1].getRect().top + 100)
-                || getRect().top > clouds[1].getRect().bottom - 100)){
+    public boolean cloudCollisionTop(List<Cloud> clouds){
+        if((!Rect.intersects(getRect(), clouds.get(0).getRect()) || getRect().bottom < clouds.get(0).getRect().top + 100)
+                && (!Rect.intersects(getRect(), clouds.get(2).getRect()) || getRect().bottom < clouds.get(2).getRect().top + 100)
+                && ((getRect().right < clouds.get(1).getRect().right - (clouds.get(1).getRect().right - clouds.get(1).getRect().left) || getRect().left > clouds.get(1).getRect().right)
+                || (getRect().left < clouds.get(1).getRect().right && getRect().right > clouds.get(1).getRect().left && getRect().bottom < clouds.get(1).getRect().top + 100)
+                || getRect().top > clouds.get(1).getRect().bottom - 100)){
             return true;
         }
         return false;
     }
 
-    public boolean cloudCollisionBottom(Cloud[] clouds){
-        if((getRect().right < clouds[1].getRect().right - (clouds[1].getRect().right - clouds[1].getRect().left) || getRect().left > clouds[1].getRect().right)
-                || (getRect().left < clouds[1].getRect().right && getRect().right > clouds[1].getRect().left && getRect().top > clouds[1].getRect().bottom)
-                || (getRect().left < clouds[1].getRect().right && getRect().right > clouds[1].getRect().left && getRect().top < clouds[1].getRect().top)){
+    public boolean cloudCollisionBottom(List<Cloud> clouds){
+        if((getRect().right < clouds.get(1).getRect().right - (clouds.get(1).getRect().right - clouds.get(1).getRect().left) || getRect().left > clouds.get(1).getRect().right)
+                || (getRect().left < clouds.get(1).getRect().right && getRect().right > clouds.get(1).getRect().left && getRect().top > clouds.get(1).getRect().bottom)
+                || (getRect().left < clouds.get(1).getRect().right && getRect().right > clouds.get(1).getRect().left && getRect().top < clouds.get(1).getRect().top)){
             return true;
         }
         return false;
