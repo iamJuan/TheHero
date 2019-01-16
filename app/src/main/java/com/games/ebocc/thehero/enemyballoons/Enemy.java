@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.gameenv.GameEntities;
 
+import java.util.List;
 import java.util.Random;
 
 public class Enemy extends GameEntities implements Runnable{
@@ -28,6 +29,8 @@ public class Enemy extends GameEntities implements Runnable{
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
     private int lives = 2;
+
+    public Enemy(){}
 
     public Enemy(int left, int top, SurfaceView view) {
         super(left, top, view);
@@ -69,25 +72,25 @@ public class Enemy extends GameEntities implements Runnable{
         targetX = new Random().nextInt(screenWidth);
         targetY = new Random().nextInt(screenHeight - 400);
         Rect rectTravel = new Rect();
-        rectTravel.set(targetX, targetY,targetX+50, targetY+50);
+        rectTravel.set(targetX, targetY,targetX+100, targetY+100);
 
         return rectTravel;
     }
 
-    public Rect oppositeTravel(int bounceFrom){
+    public Rect oppositeTravel(){
         if(isFacingLeft) {
-            targetX = bounceFrom - 500;
+            targetX = x + 500;
             isFacingLeft = false;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
         }else{
-            targetX = bounceFrom + 500;
+            targetX = x - 500;
             isFacingLeft = true;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
         }
 
         targetY = y;
         Rect rectTravel = new Rect();
-        rectTravel.set(targetX, targetY,targetX+50, targetY+50);
+        rectTravel.set(targetX, targetY,targetX+100, targetY+100);
 
         return rectTravel;
     }
@@ -102,18 +105,16 @@ public class Enemy extends GameEntities implements Runnable{
         return rectTravel;
     }
 
-    public void collidedWithFriend(int src){
-        if(!hasFallen){
-           targetTravel = oppositeTravel(src);
+    public void isEnemyCollidedWithFriends(List<Enemy> friends){
+
+        for(int iter = 0; iter < friends.size(); iter++){
+            Enemy myself = this;
+            Enemy friend = friends.get(iter);
+            if(Rect.intersects(myself.getRect(), friend.getRect()) && !myself.equals(friend)) {
+                targetTravel = oppositeTravel();
+            }
         }
     }
-
-//    public void collidedWithCloud(boolean isAlignedWithY){
-//        if(isAlignedWithY)
-//            targetTravel = oppositeTravel();
-//        else
-//            targetTravel = justTravel();
-//    }
 
     public void updateHeroPosition(int heroX, int heroY){
         this.heroX = heroX;

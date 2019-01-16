@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -52,7 +51,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         enemies.add(new Enemy(1200, 300, this));
         heroPos.addObserver(enemies.get(0));
 
-        enemies.add(new Enemy(2200, 950, this));
+        enemies.add(new Enemy(2200, 300, this));
         heroPos.addObserver(enemies.get(1));
 
         heroRect = hero.getRect();
@@ -103,76 +102,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         for(int iter = 0; iter < enemies.size(); iter++) {
-            if (isCollidedWithEnemy(enemies.get(iter))) {
-                if(heroRect.bottom < enemies.get(iter).getRect().bottom) {
-                    hero.bounceUp();
-                    enemies.get(iter).setLives(enemies.get(iter).getLives()-1);
-                    if(enemies.get(iter).getLives() == 1)
-                        enemies.get(iter).fallTravel();
-                    else
-                        enemies.remove(iter); //enemy death
-                }else{
-
-                }
+            Enemy enemy = enemies.get(iter);
+            if (hero.isCollidedWithEnemy(enemy)) {
+                if(enemy.getLives() == 0)
+                    enemies.remove(enemy); //enemy death
             }
-            isEnemyCollidedWithEnemy(enemies.get(iter));
-            isCollidedWithCloud(enemies.get(iter));
+
+            enemy.isEnemyCollidedWithFriends(enemies);
         }
     }
 
     public void update() {
 
         if (!isGoingUp) {
-            if ((!Rect.intersects(heroRect, cloudRect1) || heroRect.bottom < cloudRect1.top + 100)
-                    && (!Rect.intersects(heroRect, cloudRect3) || heroRect.bottom < cloudRect3.top + 100)
-                    && ((heroRect.right < cloudRect2.right - (cloudRect2.right - cloudRect2.left) || heroRect.left > cloudRect2.right)
-                    || (heroRect.left < cloudRect2.right && heroRect.right > cloudRect2.left && heroRect.bottom < cloudRect2.top + 100)
-                    || heroRect.top > cloudRect2.bottom - 100))
+            if (hero.cloudCollisionTop(clouds))
                 hero.goDown();
         }else {
-            if((heroRect.right < cloudRect2.right - (cloudRect2.right - cloudRect2.left) || heroRect.left > cloudRect2.right)
-                    || (heroRect.left < cloudRect2.right && heroRect.right > cloudRect2.left && heroRect.top > cloudRect2.bottom)
-                    || (heroRect.left < cloudRect2.right && heroRect.right > cloudRect2.left && heroRect.top < cloudRect2.top))
-            hero.goUp();
+            if(hero.cloudCollisionBottom(clouds))
+                hero.goUp();
         }
 
         for(int enemyIter = 0; enemyIter < enemies.size(); enemyIter++){
             heroPos.notifyEnemies(heroRect.left, heroRect.top);
         }
     }
-    //----------------------collision------------------
-    private boolean isCollidedWithEnemy(Enemy enemy) {
-        boolean hasCollided = false;
 
-        if(Rect.intersects(hero.getRect(), enemy.getRect())){
-            hasCollided = true;
-        }
-
-        return hasCollided;
-    }
-
-    private void isEnemyCollidedWithEnemy(Enemy enemy){
-
-        for(int enemyIter = 0; enemyIter < enemies.size(); enemyIter++){
-            Rect enemyRect = enemy.getRect();
-            Rect enemyFriend = enemies.get(enemyIter).getRect();
-            if(Rect.intersects(enemyRect, enemyFriend) && !enemy.equals(enemies.get(enemyIter)))
-                if ((enemyRect.top - enemyFriend.top < 100 || enemyFriend.top - enemyRect.top < 100)
-                    && ((enemyRect.left < enemyFriend.left && enemyRect.right < enemyFriend.right)||(enemyRect.left > enemyFriend.left && enemyRect.right > enemyFriend.right))) {
-                    enemy.collidedWithFriend(enemyFriend.left);
-                    enemies.get(enemyIter).collidedWithFriend(enemyRect.left);
-                }
-            }
-    }
-
-    private void isCollidedWithCloud(Enemy enemy) {
-        Rect enemyRect = enemy.getRect();
-
-        if(enemyRect.intersect(cloudRect2) && enemy.getY() <= clouds[1].getY()){
-            //enemy.collidedWithCloud(true);
-        }
-    }
-    //----------------------collision------------------
 
     public void gameStart(){
         for(int enemyIter = 0; enemyIter < enemies.size(); enemyIter++){

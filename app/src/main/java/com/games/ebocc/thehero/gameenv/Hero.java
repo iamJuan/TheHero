@@ -2,9 +2,11 @@ package com.games.ebocc.thehero.gameenv;
 
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
+import com.games.ebocc.thehero.enemyballoons.Enemy;
 
 public class Hero extends GameEntities {
 
@@ -83,5 +85,36 @@ public class Hero extends GameEntities {
                 break;
 
         }
+    }
+
+    public boolean isCollidedWithEnemy(Enemy enemy) {
+        if(Rect.intersects(this.getRect(), enemy.getRect())){
+            bounceUp();
+            enemy.setLives(enemy.getLives()-1);
+            if(enemy.getLives() == 1)
+                enemy.fallTravel();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean cloudCollisionTop(Cloud[] clouds){
+        if((!Rect.intersects(getRect(), clouds[0].getRect()) || getRect().bottom < clouds[0].getRect().top + 100)
+                && (!Rect.intersects(getRect(), clouds[2].getRect()) || getRect().bottom < clouds[2].getRect().top + 100)
+                && ((getRect().right < clouds[1].getRect().right - (clouds[1].getRect().right - clouds[1].getRect().left) || getRect().left > clouds[1].getRect().right)
+                || (getRect().left < clouds[1].getRect().right && getRect().right > clouds[1].getRect().left && getRect().bottom < clouds[1].getRect().top + 100)
+                || getRect().top > clouds[1].getRect().bottom - 100)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean cloudCollisionBottom(Cloud[] clouds){
+        if((getRect().right < clouds[1].getRect().right - (clouds[1].getRect().right - clouds[1].getRect().left) || getRect().left > clouds[1].getRect().right)
+                || (getRect().left < clouds[1].getRect().right && getRect().right > clouds[1].getRect().left && getRect().top > clouds[1].getRect().bottom)
+                || (getRect().left < clouds[1].getRect().right && getRect().right > clouds[1].getRect().left && getRect().top < clouds[1].getRect().top)){
+            return true;
+        }
+        return false;
     }
 }
