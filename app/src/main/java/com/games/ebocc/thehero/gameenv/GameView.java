@@ -29,6 +29,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+    private boolean isLevelEnded = false;
+
+    private boolean isGameStarted = false;
 
     public GameView(Context context) {
         super(context);
@@ -39,10 +42,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         clouds = new ArrayList<>();
         enemies = new ArrayList<>();
-
-        initStage(3);
-
         heroRect = hero.getRect();
+
+        initStage(1);
 
         setFocusable(true);
         getHolder().addCallback(this);
@@ -55,8 +57,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 clouds.add(new Cloud(1200, 600, this));
                 clouds.add(new Cloud(2200, 1100, this));
 
-                enemies.add(new Enemy(1200, 300, this));
-                enemies.add(new Enemy(2200, 300, this));
+                enemies.add(new Enemy(1200, 400, this));
+                enemies.add(new Enemy(2200, 900, this));
                 break;
 
             case 2:
@@ -144,38 +146,58 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        if(enemies.size() < 1){
-            clouds.clear();
-            LEVEL++;
-            initStage(LEVEL);
-        }
+        if(!isLevelEnded){
+            if(enemies.size() < 1){
+                clouds.clear();
+                LEVEL++;
+                setGameStarted(false);
+                initStage(LEVEL);
 
-        if (!isGoingUp) {
-            if (hero.cloudCollisionTop(clouds))
-                hero.goDown();
-        }else {
-            if(hero.cloudCollisionBottom(clouds))
-                hero.goUp();
+                isLevelEnded = true;
+            }
+
+            if (!isGoingUp) {
+                if (hero.cloudCollisionTop(clouds))
+                    hero.goDown();
+            }else {
+                if(hero.cloudCollisionBottom(clouds))
+                    hero.goUp();
+            }
         }
     }
 
 
     public void gameStart(){
-        for(int enemyIter = 0; enemyIter < enemies.size(); enemyIter++){
+        for (int enemyIter = 0; enemyIter < enemies.size(); enemyIter++) {
             enemies.get(enemyIter).run();
         }
+        setGameStarted(true);
+    }
+
+    public boolean isLevelEnded() {
+        return isLevelEnded;
+    }
+
+    public void setIsLevelEnded(boolean isLevelEnded){
+        this.isLevelEnded = isLevelEnded;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        isGameStarted = gameStarted;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent){
 
-        switch (motionEvent.getAction()){
-            case MotionEvent.ACTION_UP:
-                isGoingUp = false;
-                break;
-            case MotionEvent.ACTION_DOWN:
-                isGoingUp = true;
-                break;
+        if(isGameStarted) {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    isGoingUp = false;
+                    break;
+                case MotionEvent.ACTION_DOWN:
+                    isGoingUp = true;
+                    break;
+            }
         }
         return true;
     }

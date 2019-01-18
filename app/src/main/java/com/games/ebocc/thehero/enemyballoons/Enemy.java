@@ -38,7 +38,7 @@ public class Enemy extends GameEntities implements Runnable{
         this.view = view;
         this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
 
-        targetTravel = justTravel();
+        targetTravel = initTravel();
     }
 
     @Override
@@ -69,6 +69,15 @@ public class Enemy extends GameEntities implements Runnable{
         }
     }
 
+    private Rect initTravel() {
+        targetX = x;
+        targetY = y - 400;
+        Rect rectTravel = new Rect();
+        rectTravel.set(targetX, targetY,targetX+100, targetY+100);
+
+        return rectTravel;
+    }
+
     private Rect justTravel() {
         targetX = new Random().nextInt(screenWidth);
         targetY = new Random().nextInt(screenHeight - 500);
@@ -97,6 +106,7 @@ public class Enemy extends GameEntities implements Runnable{
     }
 
     public void fall(){
+        hasFallen = true;
         targetTravel = fallTravel();
     }
 
