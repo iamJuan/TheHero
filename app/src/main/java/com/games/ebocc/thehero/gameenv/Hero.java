@@ -2,15 +2,17 @@ package com.games.ebocc.thehero.gameenv;
 
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.enemyballoons.Enemy;
+import com.games.ebocc.thehero.util.CollisionChecker;
 
 import java.util.List;
 
 public class Hero extends GameEntities {
+
+    private CollisionChecker collisionChecker;
 
     private int xVelocity = 8;
     private int yVelocity = 5;
@@ -26,6 +28,7 @@ public class Hero extends GameEntities {
 
     public Hero(int left, int top, SurfaceView view) {
         super(left, top, view);
+        collisionChecker = new CollisionChecker();
         this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
     }
 
@@ -90,7 +93,7 @@ public class Hero extends GameEntities {
     }
 
     public boolean isCollidedWithEnemy(Enemy enemy) {
-        if(Rect.intersects(this.getRect(), enemy.getRect())){
+        if(collisionChecker.checkCollision(this.getRect(),enemy.getRect())){
             bounceUp();
             enemy.setLives(enemy.getLives()-1);
             if(enemy.getLives() == 1)
@@ -100,14 +103,11 @@ public class Hero extends GameEntities {
         return false;
     }
 
-    public boolean cloudCollisionTop(List<Cloud> clouds){
-        if((!Rect.intersects(getRect(), clouds.get(0).getRect()) || getRect().bottom < clouds.get(0).getRect().top + 100)
-                && (!Rect.intersects(getRect(), clouds.get(2).getRect()) || getRect().bottom < clouds.get(2).getRect().top + 100)
-                && ((getRect().right < clouds.get(1).getRect().right - (clouds.get(1).getRect().right - clouds.get(1).getRect().left) || getRect().left > clouds.get(1).getRect().right)
-                || (getRect().left < clouds.get(1).getRect().right && getRect().right > clouds.get(1).getRect().left && getRect().bottom < clouds.get(1).getRect().top + 100)
-                || getRect().top > clouds.get(1).getRect().bottom - 100)){
-            return true;
+    public boolean cloudCollision(List<Cloud> clouds){
+        for (Cloud cloud : clouds) {
+            return collisionChecker.checkCollision(this.getRect(), cloud.getRect()) && collisionChecker.checkAlignmentY(this.getRect(), cloud.getRect());
         }
+
         return false;
     }
 

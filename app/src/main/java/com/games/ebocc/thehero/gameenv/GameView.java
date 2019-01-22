@@ -141,7 +141,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             enemy.isEnemyCollidedWithFriends(enemies);
-            enemy.isCollidedWithClouds(clouds);
+            //enemy.isCollidedWithClouds(clouds);
         }
     }
 
@@ -149,7 +149,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(!isLevelEnded){
             if(enemies.size() < 1){
                 clouds.clear();
-                LEVEL++;
+                //LEVEL++;
                 setGameStarted(false);
                 initStage(LEVEL);
 
@@ -157,10 +157,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             if (!isGoingUp) {
-                if (hero.cloudCollisionTop(clouds))
+                if (!hero.cloudCollision(clouds))
                     hero.goDown();
             }else {
-                if(hero.cloudCollisionBottom(clouds))
+                if(!hero.cloudCollisionBottom(clouds))
                     hero.goUp();
             }
         }

@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.gameenv.Cloud;
 import com.games.ebocc.thehero.gameenv.GameEntities;
+import com.games.ebocc.thehero.util.CollisionChecker;
 
 import java.util.List;
 import java.util.Random;
@@ -15,12 +16,12 @@ import java.util.Random;
 public class Enemy extends GameEntities implements Runnable{
 
     private SurfaceView view;
+    private CollisionChecker collisionChecker;
     private int targetX;
     private int targetY;
     private int heroX;
     private int heroY;
 
-    private boolean isFacingLeft = false;
     private boolean hasFallen = false;
 
     private Rect targetTravel;
@@ -37,7 +38,7 @@ public class Enemy extends GameEntities implements Runnable{
         super(left, top, view);
         this.view = view;
         this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
-
+        collisionChecker = new CollisionChecker();
         targetTravel = initTravel();
     }
 
@@ -47,13 +48,11 @@ public class Enemy extends GameEntities implements Runnable{
         if (x > targetX - 50) {
             x -= xVelocity;
             if(!hasFallen) {
-                isFacingLeft = true;
                 image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
             }
         } else if (x < targetX + 50) {
             x += xVelocity;
             if(!hasFallen) {
-                isFacingLeft = false;
                 image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
             }
         }
@@ -71,7 +70,7 @@ public class Enemy extends GameEntities implements Runnable{
 
     private Rect initTravel() {
         targetX = x;
-        targetY = y - 400;
+        targetY = y - 300;
         Rect rectTravel = new Rect();
         rectTravel.set(targetX, targetY,targetX+100, targetY+100);
 
@@ -87,14 +86,12 @@ public class Enemy extends GameEntities implements Runnable{
         return rectTravel;
     }
 
-    public Rect oppositeTravel(){
-        if(isFacingLeft) {
+    public Rect oppositeTravel(int side){
+        if(side == 1) {
             targetX = x + 500;
-            isFacingLeft = false;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
-        }else{
+        }else if(side == 2){
             targetX = x - 500;
-            isFacingLeft = true;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
         }
 
@@ -125,15 +122,26 @@ public class Enemy extends GameEntities implements Runnable{
         for(int iter = 0; iter < friends.size(); iter++){
             Enemy myself = this;
             Enemy friend = friends.get(iter);
-            if(Rect.intersects(myself.getRect(), friend.getRect()) && !myself.equals(friend)) {
-                targetTravel = oppositeTravel();
+            if(!myself.equals(friend) && collisionChecker.checkCollision(myself.getRect(), friend.getRect())) {
+                if (collisionChecker.checkIfBounceToLeft(myself.getRect(), friend.getRect())) {
+                    targetTravel = oppositeTravel(2);
+                } else if (collisionChecker.checkIfBounceToRight(myself.getRect(), friend.getRect())) {
+                    targetTravel = oppositeTravel(1);
+                }
             }
         }
     }
 
     public void isCollidedWithClouds(List<Cloud> clouds) {
-        if(getRect().intersect(clouds.get(1).getRect())){
-            targetTravel = oppositeTravel();
+        for (Cloud cloud : clouds){
+            if(collisionChecker.checkCollision(this.getRect(),cloud.getRect())){
+                if(collisionChecker.checkAlignmentY(this.getRect(),cloud.getRect())){
+                    targetTravel = oppositeTravel(2);
+                }
+                else if(collisionChecker.checkIfBounceToLeft(this.getRect(),cloud.getRect())){
+                    targetTravel = initTravel();
+                }
+            }
         }
     }
 
