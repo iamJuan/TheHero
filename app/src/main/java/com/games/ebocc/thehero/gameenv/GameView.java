@@ -141,7 +141,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             enemy.isEnemyCollidedWithFriends(enemies);
-            //enemy.isCollidedWithClouds(clouds);
+            enemy.isCollidedWithClouds(clouds);
         }
     }
 

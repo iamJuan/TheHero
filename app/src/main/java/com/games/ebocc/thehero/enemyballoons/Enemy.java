@@ -39,7 +39,7 @@ public class Enemy extends GameEntities implements Runnable{
         this.view = view;
         this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
         collisionChecker = new CollisionChecker();
-        targetTravel = initTravel();
+        targetTravel = initTravel(2);
     }
 
     @Override
@@ -68,9 +68,12 @@ public class Enemy extends GameEntities implements Runnable{
         }
     }
 
-    private Rect initTravel() {
+    private Rect initTravel(int upOrDown) {
         targetX = x;
-        targetY = y - 300;
+        if(upOrDown == 2)
+            targetY = y - 200;
+        else
+            targetY = y + 200;
         Rect rectTravel = new Rect();
         rectTravel.set(targetX, targetY,targetX+100, targetY+100);
 
@@ -123,10 +126,14 @@ public class Enemy extends GameEntities implements Runnable{
             Enemy myself = this;
             Enemy friend = friends.get(iter);
             if(!myself.equals(friend) && collisionChecker.checkCollision(myself.getRect(), friend.getRect())) {
-                if (collisionChecker.checkIfBounceToLeft(myself.getRect(), friend.getRect())) {
+                if (collisionChecker.checkIfBounceLeft(myself.getRect(), friend.getRect())) {
                     targetTravel = oppositeTravel(2);
-                } else if (collisionChecker.checkIfBounceToRight(myself.getRect(), friend.getRect())) {
+                } else if (collisionChecker.checkIfBounceRight(myself.getRect(), friend.getRect())) {
                     targetTravel = oppositeTravel(1);
+                } else if(collisionChecker.checkIfBounceUp(this.getRect(),friend.getRect())){
+                    targetTravel = initTravel(2);
+                }else if(collisionChecker.checkIfBounceDown(this.getRect(),friend.getRect())){
+                    targetTravel = initTravel(1);
                 }
             }
         }
@@ -134,12 +141,15 @@ public class Enemy extends GameEntities implements Runnable{
 
     public void isCollidedWithClouds(List<Cloud> clouds) {
         for (Cloud cloud : clouds){
-            if(collisionChecker.checkCollision(this.getRect(),cloud.getRect())){
-                if(collisionChecker.checkAlignmentY(this.getRect(),cloud.getRect())){
+            if(this.getRect().intersect(cloud.getRect())){
+                if(collisionChecker.checkIfBounceLeft(this.getRect(),cloud.getRect())){
                     targetTravel = oppositeTravel(2);
-                }
-                else if(collisionChecker.checkIfBounceToLeft(this.getRect(),cloud.getRect())){
-                    targetTravel = initTravel();
+                }else if(collisionChecker.checkIfBounceRight(this.getRect(),cloud.getRect())){
+                    targetTravel = oppositeTravel(1);
+                }else if(collisionChecker.checkIfBounceUp(this.getRect(),cloud.getRect())){
+                    targetTravel = initTravel(2);
+                }else if(collisionChecker.checkIfBounceDown(this.getRect(),cloud.getRect())){
+                    targetTravel = initTravel(1);
                 }
             }
         }

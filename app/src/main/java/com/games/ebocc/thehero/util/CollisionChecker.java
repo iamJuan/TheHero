@@ -8,7 +8,7 @@ public class CollisionChecker {
 
             int distanceRightX = Math.abs(rectA.right - rectB.right);
             int distanceBottomY = Math.abs(rectA.bottom - rectB.bottom);
-            int threshold = 100;
+            int threshold = 150;
 
             if(rectA.intersect(rectB) && distanceBottomY < threshold && distanceRightX < threshold){
                 return true;
@@ -16,30 +16,35 @@ public class CollisionChecker {
             return false;
         }
 
-        public boolean checkAlignmentY(Rect rectA, Rect rectB){
-            int distanceTopY = Math.abs(rectA.top - rectB.top);
-            int distanceBottomY = Math.abs(rectA.bottom - rectB.bottom);
-            int threshold = 100;
+        public boolean checkIfBounceLeft(Rect rectA, Rect rectB){
 
-            if(distanceBottomY <= threshold && distanceTopY <= threshold){
+            if(rectA.right < rectB.right && rectA.left < rectB.left){
                 return true;
             }
             return false;
         }
 
-        public boolean checkIfBounceToLeft(Rect rectA, Rect rectB){
+        public boolean checkIfBounceRight(Rect rectA, Rect rectB){
 
-            if((rectA.right <= rectB.right && rectA.left <= rectB.left)){
+            if(rectA.right > rectB.right && rectA.left > rectB.left){
                 return true;
             }
             return false;
         }
 
-        public boolean checkIfBounceToRight(Rect rectA, Rect rectB){
-
-            if((rectA.right >= rectB.right && rectA.left >= rectB.left)){
+        public boolean checkIfBounceUp(Rect rectA, Rect rectB){
+            if(rectA.top < rectB.top && rectA.bottom < rectB.bottom){
                 return true;
             }
+
+            return false;
+        }
+
+        public boolean checkIfBounceDown(Rect rectA, Rect rectB){
+            if(rectA.top > rectB.top && rectA.bottom > rectB.bottom){
+                return true;
+            }
+
             return false;
         }
 

@@ -104,19 +104,12 @@ public class Hero extends GameEntities {
     }
 
     public boolean cloudCollision(List<Cloud> clouds){
-        for (Cloud cloud : clouds) {
-            return collisionChecker.checkCollision(this.getRect(), cloud.getRect()) && collisionChecker.checkAlignmentY(this.getRect(), cloud.getRect());
-        }
 
         return false;
     }
 
     public boolean cloudCollisionBottom(List<Cloud> clouds){
-        if((getRect().right < clouds.get(1).getRect().right - (clouds.get(1).getRect().right - clouds.get(1).getRect().left) || getRect().left > clouds.get(1).getRect().right)
-                || (getRect().left < clouds.get(1).getRect().right && getRect().right > clouds.get(1).getRect().left && getRect().top > clouds.get(1).getRect().bottom)
-                || (getRect().left < clouds.get(1).getRect().right && getRect().right > clouds.get(1).getRect().left && getRect().top < clouds.get(1).getRect().top)){
-            return true;
-        }
+
         return false;
     }
 }
