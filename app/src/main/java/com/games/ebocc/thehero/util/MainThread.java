@@ -42,6 +42,12 @@ public class MainThread extends Thread{
 
             prestart++;
 
+            if(this.gameView.getBalloonFactory() != null){
+                if(prestart % 80 == 0){
+                    this.gameView.getBalloonFactory().run();
+                }
+            }
+
             try {
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized(surfaceHolder) {

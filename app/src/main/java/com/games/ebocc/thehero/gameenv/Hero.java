@@ -6,7 +6,7 @@ import android.graphics.Rect;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
-import com.games.ebocc.thehero.enemyballoons.Enemy;
+import com.games.ebocc.thehero.balloons.Enemy;
 import com.games.ebocc.thehero.util.CollisionChecker;
 
 import java.util.List;

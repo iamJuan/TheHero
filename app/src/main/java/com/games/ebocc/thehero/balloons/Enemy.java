@@ -1,4 +1,4 @@
-package com.games.ebocc.thehero.enemyballoons;
+package com.games.ebocc.thehero.balloons;
 
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
