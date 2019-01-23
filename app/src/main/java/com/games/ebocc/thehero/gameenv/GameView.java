@@ -17,9 +17,11 @@ import java.util.List;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread thread;
-    private List<Cloud> clouds;
+
     private Hero hero;
+    private List<Cloud> clouds;
     private List<Enemy> enemies;
+    private List<Tube> tubes;
 
     private boolean isGoingUp = false;
 
@@ -42,6 +44,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         clouds = new ArrayList<>();
         enemies = new ArrayList<>();
+        tubes = new ArrayList<>();
+
         heroRect = hero.getRect();
 
         initStage(LEVEL);
@@ -89,6 +93,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 enemies.add(new Enemy(1600, screenHeight - 900, this));
                 enemies.add(new Enemy(2200, 1000, this));
                 break;
+
+            case 4:
+                hero.setX(0);
+                hero.setY(100);
+                clouds.add(new Cloud(0, 300, this));
+
+                tubes.add(new Tube(300, screenHeight - 300, this));
+                tubes.add(new Tube(800, screenHeight - 300, this));
+                tubes.add(new Tube(1300, screenHeight - 300, this));
+                tubes.add(new Tube(1800, screenHeight - 300, this));
+                break;
         }
 
         for(Enemy enemy : enemies){
@@ -127,15 +142,32 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         if (canvas != null) {
 
-            for(int iter = 0; iter < clouds.size(); iter++) {
-                clouds.get(iter).draw(canvas);
+            for(Cloud cloud : clouds) {
+                cloud.draw(canvas);
             }
 
-            for(int iter = 0; iter < enemies.size(); iter++) {
-                enemies.get(iter).draw(canvas);
+            for(Enemy enemy : enemies) {
+                enemy.draw(canvas);
+            }
+
+            for(Tube tube : tubes){
+                tube.draw(canvas);
             }
 
             hero.draw(canvas);
+        }
+    }
+
+    public void update() {
+        if(!isLevelEnded){
+            if(enemies.size() < 1 && LEVEL < 4){
+                clouds.clear();
+                LEVEL++;
+                setGameStarted(false);
+                initStage(LEVEL);
+
+                isLevelEnded = true;
+            }
         }
 
         for(int iter = 0; iter < enemies.size(); iter++) {
@@ -149,26 +181,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             enemy.isEnemyCollidedWithFriends(enemies);
             enemy.isCollidedWithClouds();
         }
-    }
 
-    public void update() {
-        if(!isLevelEnded){
-            if(enemies.size() < 1){
-                clouds.clear();
-                LEVEL++;
-                setGameStarted(false);
-                initStage(LEVEL);
-
-                isLevelEnded = true;
-            }
-
-            if (isGoingUp) {
-                if (!hero.cloudCollisionBottom(clouds))
-                    hero.goUp();
-            }else {
-                if(!hero.cloudCollisionTop(clouds))
-                    hero.goDown();
-            }
+        if (isGoingUp) {
+            if (!hero.cloudCollisionBottom(clouds))
+                hero.goUp();
+        }else {
+            if(!hero.cloudCollisionTop(clouds))
+                hero.goDown();
         }
     }
 
