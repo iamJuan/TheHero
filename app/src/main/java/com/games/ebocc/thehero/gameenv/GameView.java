@@ -25,13 +25,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private boolean isGoingUp = false;
 
-    private Rect heroRect;
-
-    private int LEVEL = 1;
+    private int LEVEL = 4;
 
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-    private boolean isLevelEnded = false;
 
     private boolean isGameStarted = false;
 
@@ -45,8 +42,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         clouds = new ArrayList<>();
         enemies = new ArrayList<>();
         tubes = new ArrayList<>();
-
-        heroRect = hero.getRect();
 
         initStage(LEVEL);
 
@@ -159,19 +154,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        if(!isLevelEnded){
-            if(enemies.size() < 1 && LEVEL < 4){
-                clouds.clear();
-                LEVEL++;
-                setGameStarted(false);
-                initStage(LEVEL);
-
-                isLevelEnded = true;
-            }
+        if(enemies.size() < 1 && LEVEL < 4){
+            clouds.clear();
+            setGameStarted(false);
+            LEVEL++;
+            initStage(LEVEL);
         }
 
-        for(int iter = 0; iter < enemies.size(); iter++) {
-            Enemy enemy = enemies.get(iter);
+        for(Enemy enemy : enemies) {
             hero.isCollidedWithEnemy(enemy);
 
             if(enemy.getLives() == 0) {
@@ -186,25 +176,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (!hero.cloudCollisionBottom(clouds))
                 hero.goUp();
         }else {
-            if(!hero.cloudCollisionTop(clouds))
+            if(!hero.cloudCollisionTop(clouds)
+                    && !hero.tubeCollisionTop(tubes))
                 hero.goDown();
         }
     }
 
 
     public void gameStart(){
-        for (int enemyIter = 0; enemyIter < enemies.size(); enemyIter++) {
-            enemies.get(enemyIter).run();
+        for (Enemy enemy : enemies) {
+            enemy.run();
         }
         setGameStarted(true);
-    }
-
-    public boolean isLevelEnded() {
-        return isLevelEnded;
-    }
-
-    public void setIsLevelEnded(boolean isLevelEnded){
-        this.isLevelEnded = isLevelEnded;
     }
 
     public void setGameStarted(boolean gameStarted) {

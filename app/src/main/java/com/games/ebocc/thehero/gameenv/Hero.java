@@ -104,10 +104,19 @@ public class Hero extends GameEntities {
         return false;
     }
 
+    public boolean tubeCollisionTop(List<Tube> tubes) {
+        for(Tube tube : tubes){
+            Rect tubeRect = tube.getRect();
+            if(Rect.intersects(this.getRect(), tubeRect) && collisionChecker.checkCollisionOnTopWithNonMovingObjects(this.getRect(), tubeRect))
+                return true;
+        }
+        return false;
+    }
+
     public boolean cloudCollisionTop(List<Cloud> clouds) {
         for(Cloud cloud : clouds){
             Rect cloudRect = cloud.getRect();
-            if(Rect.intersects(rect, cloudRect) && collisionChecker.checkCollisionOnTopWithCloud(rect, cloudRect))
+            if(Rect.intersects(this.getRect(), cloudRect) && collisionChecker.checkCollisionOnTopWithNonMovingObjects(this.getRect(), cloudRect))
                 return true;
         }
         return false;
@@ -116,7 +125,7 @@ public class Hero extends GameEntities {
     public boolean cloudCollisionBottom(List<Cloud> clouds) {
         for(Cloud cloud : clouds){
             Rect cloudRect = cloud.getRect();
-            if(Rect.intersects(rect, cloudRect) && collisionChecker.checkCollisionOnBottomWithCloud(rect, cloudRect))
+            if(Rect.intersects(this.getRect(), cloudRect) && collisionChecker.checkCollisionOnBottomWithNonMovingObjects(this.getRect(), cloudRect))
                 return true;
         }
         return false;

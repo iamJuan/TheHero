@@ -36,13 +36,8 @@ public class MainThread extends Thread{
             startTime = System.nanoTime();
             canvas = null;
 
-            if(!this.gameView.isLevelEnded()){
-                if (prestart > 120) {
-                    this.gameView.gameStart();
-                }
-            }else{
-                this.gameView.setIsLevelEnded(false);
-                prestart = 0;
+            if (prestart > 120) {
+                this.gameView.gameStart();
             }
 
             prestart++;

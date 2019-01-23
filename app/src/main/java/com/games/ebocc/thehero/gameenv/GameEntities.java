@@ -15,8 +15,6 @@ public class GameEntities {
 
     protected Rect rect;
 
-    public GameEntities(){}
-
     public GameEntities(int left, int top, SurfaceView view) {
         this.x = left;
         this.y = top;

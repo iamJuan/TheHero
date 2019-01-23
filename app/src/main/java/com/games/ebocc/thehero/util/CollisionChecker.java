@@ -31,11 +31,11 @@ public class CollisionChecker {
         return (rectA.top > rectB.top && rectA.bottom > rectB.bottom);
     }
 
-    public boolean checkCollisionOnTopWithCloud(Rect rectA, Rect rectB){
+    public boolean checkCollisionOnTopWithNonMovingObjects(Rect rectA, Rect rectB){
         return rectA.top < rectB.top;
     }
 
-    public boolean checkCollisionOnBottomWithCloud(Rect rectA, Rect rectB){
+    public boolean checkCollisionOnBottomWithNonMovingObjects(Rect rectA, Rect rectB){
         return rectA.bottom >= rectB.bottom;
     }
 }
