@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
+import com.games.ebocc.thehero.balloons.Balloon;
 import com.games.ebocc.thehero.balloons.Enemy;
 import com.games.ebocc.thehero.util.CollisionChecker;
 
@@ -93,15 +94,20 @@ public class Hero extends GameEntities {
         }
     }
 
-    public boolean isCollidedWithEnemy(Enemy enemy) {
-        if(collisionChecker.checkCollision(this.getRect(),enemy.getRect())){
+    public void isCollidedWithEnemy(Enemy enemy) {
+        if(Rect.intersects(this.getRect(),enemy.getRect())){
             bounceUp();
             enemy.setLives(enemy.getLives()-1);
             if(enemy.getLives() == 1)
                 enemy.fall();
-            return true;
         }
-        return false;
+    }
+
+    public void isCollidedWithBalloon(Balloon balloon){
+        if(Rect.intersects(this.getRect(),balloon.getRect())){
+            bounceUp();
+            balloon.setExploded(true);
+        }
     }
 
     public boolean tubeCollisionTop(List<Tube> tubes) {

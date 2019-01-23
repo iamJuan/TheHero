@@ -2,11 +2,15 @@ package com.games.ebocc.thehero.gameenv;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.PixelFormat;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.balloons.Balloon;
 import com.games.ebocc.thehero.balloons.Enemy;
 import com.games.ebocc.thehero.util.BalloonFactory;
@@ -95,10 +99,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 hero.setY(100);
                 clouds.add(new Cloud(0, 300, this));
 
-                tubes.add(new Tube(300, screenHeight - 300, this));
-                tubes.add(new Tube(800, screenHeight - 300, this));
-                tubes.add(new Tube(1300, screenHeight - 300, this));
-                tubes.add(new Tube(1800, screenHeight - 300, this));
+                tubes.add(new Tube(500, screenHeight - 300, this));
+                tubes.add(new Tube(1000, screenHeight - 300, this));
+                tubes.add(new Tube(1500, screenHeight - 300, this));
+                tubes.add(new Tube(2000, screenHeight - 300, this));
 
                 balloonFactory = new BalloonFactory(this);
                 break;
@@ -148,14 +152,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 enemy.draw(canvas);
             }
 
-            if(balloonFactory != null){
-                for(Balloon balloon : balloonFactory.getBalloons()){
-                    balloon.draw(canvas);
+            if(LEVEL == 4){
+                if(balloonFactory != null){
+                    for(Balloon balloon : balloonFactory.getBalloons()){
+                        balloon.draw(canvas);
+                    }
                 }
-            }
 
-            for(Tube tube : tubes){
-                tube.draw(canvas);
+                for(Tube tube : tubes){
+                    tube.draw(canvas);
+                }
             }
 
             hero.draw(canvas);
@@ -190,8 +196,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 hero.goDown();
         }
 
-        for(Balloon balloon : balloonFactory.getBalloons()){
-            balloon.run();
+        if(LEVEL == 4){
+            for(Balloon balloon : balloonFactory.getBalloons()){
+                balloon.run();
+                hero.isCollidedWithBalloon(balloon);
+                if(balloon.ifExploded()){
+                    balloonFactory.getBalloons().remove(balloon);
+                }
+            }
         }
     }
 
@@ -229,5 +241,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public BalloonFactory getBalloonFactory(){
         return balloonFactory;
+    }
+
+    public int getLEVEL() {
+        return LEVEL;
     }
 }

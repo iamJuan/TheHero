@@ -39,7 +39,7 @@ public class Enemy extends GameEntities implements Runnable{
     public Enemy(int left, int top, SurfaceView view) {
         super(left, top, view);
         this.view = view;
-        this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
+        this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleftfly);
         collisionChecker = new CollisionChecker();
         clouds = new ArrayList<>();
         targetTravel = initTravel(GO_UP);
@@ -61,11 +61,15 @@ public class Enemy extends GameEntities implements Runnable{
             if (x > targetX - 50) {
                 x -= xVelocity;
                 if (!hasFallen) {
+                     image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleftfly);
+                }else{
                     image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
                 }
             } else if (x < targetX + 50) {
                 x += xVelocity;
                 if (!hasFallen) {
+                    image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyrightfly);
+                }else {
                     image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
                 }
             }
@@ -111,10 +115,10 @@ public class Enemy extends GameEntities implements Runnable{
     public Rect oppositeTravel(int side){
         if(side == 1) {
             targetX = x + 500;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
+            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyrightfly);
         }else if(side == 2){
             targetX = x - 500;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
+            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleftfly);
         }
 
         targetY = y;
@@ -126,10 +130,12 @@ public class Enemy extends GameEntities implements Runnable{
 
     public void fall(){
         hasFallen = true;
+        y += 200;
         targetTravel = fallTravel();
     }
 
     public Rect fallTravel() {
+        yVelocity += 3;
         targetX = x + xVelocity;
         targetY = screenHeight + 400;
         Rect rectTravel = new Rect();
@@ -141,7 +147,7 @@ public class Enemy extends GameEntities implements Runnable{
     public void isEnemyCollidedWithFriends(List<Enemy> friends){
         Enemy myself = this;
         for(Enemy friend : friends){
-            if(!myself.equals(friend) && collisionChecker.checkCollision(myself.getRect(), friend.getRect()) && !hasFallen) {
+            if(!myself.equals(friend) && Rect.intersects(myself.getRect(), friend.getRect()) && !hasFallen) {
                 if (collisionChecker.checkCollisionOnLeft(myself.getRect(), friend.getRect())) {
                     targetTravel = oppositeTravel(GO_UP);
                 } else if (collisionChecker.checkCollisionOnRight(myself.getRect(), friend.getRect())) {
@@ -157,7 +163,7 @@ public class Enemy extends GameEntities implements Runnable{
 
     public void isCollidedWithClouds() {
         for (Cloud cloud : clouds){
-            if(this.getRect().intersect(cloud.getRect()) && !hasFallen){
+            if(Rect.intersects(this.getRect(),cloud.getRect()) && !hasFallen){
                 if(collisionChecker.checkCollisionOnLeft(this.getRect(),cloud.getRect())){
                     targetTravel = oppositeTravel(GO_UP);
                 }else if(collisionChecker.checkCollisionOnRight(this.getRect(),cloud.getRect())){
