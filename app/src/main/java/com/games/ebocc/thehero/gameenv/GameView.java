@@ -44,7 +44,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         enemies = new ArrayList<>();
         heroRect = hero.getRect();
 
-        initStage(1);
+        initStage(LEVEL);
 
         setFocusable(true);
         getHolder().addCallback(this);
@@ -76,18 +76,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             case 3:
                 hero.setX(0);
-                hero.setY(800);
+                hero.setY(900);
                 clouds.add(new Cloud(0, 1100, this));
-                clouds.add(new Cloud(2200, screenHeight - 400, this));
-                clouds.add(new Cloud(1600, screenHeight - 700, this));
-                clouds.add(new Cloud(1000, screenHeight - 1000, this));
-                clouds.add(new Cloud(400, screenHeight - 1300, this));
 
-                enemies.add(new Enemy(2200, screenHeight - 600, this));
+                clouds.add(new Cloud(600, screenHeight - 1200, this));
+                clouds.add(new Cloud(1000, 1100, this));
+                clouds.add(new Cloud(1600, screenHeight - 800, this));
+                clouds.add(new Cloud(2200, 1100, this));
+
+                enemies.add(new Enemy(600, screenHeight - 1300, this));
+                enemies.add(new Enemy(1000, 1000, this));
                 enemies.add(new Enemy(1600, screenHeight - 900, this));
-                enemies.add(new Enemy(1000, screenHeight - 1200, this));
-                enemies.add(new Enemy(400, screenHeight - 1500, this));
+                enemies.add(new Enemy(2200, 1000, this));
                 break;
+        }
+
+        for(Enemy enemy : enemies){
+            enemy.reinitiateFirstTravel();
         }
     }
 
@@ -149,7 +154,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(!isLevelEnded){
             if(enemies.size() < 1){
                 clouds.clear();
-                //LEVEL++;
+                LEVEL++;
                 setGameStarted(false);
                 initStage(LEVEL);
 
