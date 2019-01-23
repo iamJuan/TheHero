@@ -2,6 +2,7 @@ package com.games.ebocc.thehero.gameenv;
 
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
@@ -103,13 +104,21 @@ public class Hero extends GameEntities {
         return false;
     }
 
-    public boolean cloudCollision(List<Cloud> clouds){
-
+    public boolean cloudCollisionTop(List<Cloud> clouds) {
+        for(Cloud cloud : clouds){
+            Rect cloudRect = cloud.getRect();
+            if(Rect.intersects(rect, cloudRect) && collisionChecker.checkCollisionOnTopWithCloud(rect, cloudRect))
+                return true;
+        }
         return false;
     }
 
-    public boolean cloudCollisionBottom(List<Cloud> clouds){
-
+    public boolean cloudCollisionBottom(List<Cloud> clouds) {
+        for(Cloud cloud : clouds){
+            Rect cloudRect = cloud.getRect();
+            if(Rect.intersects(rect, cloudRect) && collisionChecker.checkCollisionOnBottomWithCloud(rect, cloudRect))
+                return true;
+        }
         return false;
     }
 }

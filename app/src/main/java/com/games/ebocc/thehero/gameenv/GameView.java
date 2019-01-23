@@ -38,7 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         thread = new MainThread(getHolder(), this);
 
-        hero = new Hero(0, 800, this);
+        hero = new Hero(0, 900, this);
 
         clouds = new ArrayList<>();
         enemies = new ArrayList<>();
@@ -63,7 +63,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             case 2:
                 hero.setX(0);
-                hero.setY(800);
+                hero.setY(900);
                 clouds.add(new Cloud(0, 1100, this));
                 clouds.add(new Cloud(800, screenHeight - 600, this));
                 clouds.add(new Cloud(1200, screenHeight - 600, this));
@@ -92,6 +92,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         for(Enemy enemy : enemies){
+            enemy.setClouds(clouds);
             enemy.reinitiateFirstTravel();
         }
     }
@@ -139,14 +140,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         for(int iter = 0; iter < enemies.size(); iter++) {
             Enemy enemy = enemies.get(iter);
-            if (hero.isCollidedWithEnemy(enemy)) {
-                if(enemy.getLives() == 0) {
-                    enemies.remove(enemy);
-                }
+            hero.isCollidedWithEnemy(enemy);
+
+            if(enemy.getLives() == 0) {
+                enemies.remove(enemy);
             }
 
             enemy.isEnemyCollidedWithFriends(enemies);
-            enemy.isCollidedWithClouds(clouds);
+            enemy.isCollidedWithClouds();
         }
     }
 
@@ -161,12 +162,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 isLevelEnded = true;
             }
 
-            if (!isGoingUp) {
-                if (!hero.cloudCollision(clouds))
-                    hero.goDown();
-            }else {
-                if(!hero.cloudCollisionBottom(clouds))
+            if (isGoingUp) {
+                if (!hero.cloudCollisionBottom(clouds))
                     hero.goUp();
+            }else {
+                if(!hero.cloudCollisionTop(clouds))
+                    hero.goDown();
             }
         }
     }

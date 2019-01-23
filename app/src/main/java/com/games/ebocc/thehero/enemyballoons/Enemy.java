@@ -10,6 +10,7 @@ import com.games.ebocc.thehero.gameenv.Cloud;
 import com.games.ebocc.thehero.gameenv.GameEntities;
 import com.games.ebocc.thehero.util.CollisionChecker;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +18,7 @@ public class Enemy extends GameEntities implements Runnable{
 
     private SurfaceView view;
     private CollisionChecker collisionChecker;
+    private List<Cloud> clouds;
 
     private boolean hasFallen = false;
 
@@ -39,29 +41,46 @@ public class Enemy extends GameEntities implements Runnable{
         this.view = view;
         this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
         collisionChecker = new CollisionChecker();
+        clouds = new ArrayList<>();
         targetTravel = initTravel(GO_UP);
     }
 
     @Override
     public void run() {
 
-        if (x > targetX - 50) {
-            x -= xVelocity;
-            if(!hasFallen) {
-                image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
-            }
-        } else if (x < targetX + 50) {
-            x += xVelocity;
-            if(!hasFallen) {
-                image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
+        boolean intersectedWithCloud = false;
+
+        for(Cloud cloud : clouds){
+            Rect cloudRect = cloud.getRect();
+            if(collisionChecker.checkCollision(rect, cloudRect)&& hasFallen){
+                intersectedWithCloud = true;
             }
         }
 
-        if (y > targetY) {
-            y -= yVelocity;
-        } else if (y < targetY) {
-            y += yVelocity;
+        if(!intersectedWithCloud) {
+            if (x > targetX - 50) {
+                x -= xVelocity;
+                if (!hasFallen) {
+                    image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
+                }
+            } else if (x < targetX + 50) {
+                x += xVelocity;
+                if (!hasFallen) {
+                    image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
+                }
+            }
+
+            if (y > targetY) {
+                y -= yVelocity;
+            } else if (y < targetY) {
+                y += yVelocity;
+            }
+
+            if(y > screenHeight && hasFallen){
+                lives--;
+            }
         }
+
 
         if(Rect.intersects(rect, targetTravel) && !hasFallen){
             targetTravel = justTravel();
@@ -71,9 +90,9 @@ public class Enemy extends GameEntities implements Runnable{
     private Rect initTravel(int upOrDown) {
         targetX = x;
         if(upOrDown == 2)
-            targetY = y - 200;
+            targetY = y - 300;
         else
-            targetY = y + 200;
+            targetY = y + 300;
         Rect rectTravel = new Rect();
         rectTravel.set(targetX, targetY,targetX+100, targetY+100);
 
@@ -111,9 +130,8 @@ public class Enemy extends GameEntities implements Runnable{
     }
 
     public Rect fallTravel() {
-        hasFallen = true;
-        targetX = x;
-        targetY = screenHeight  - 400;
+        targetX = x + xVelocity;
+        targetY = screenHeight + 400;
         Rect rectTravel = new Rect();
         rectTravel.set(targetX, targetY,targetX+100, targetY+100);
 
@@ -121,34 +139,32 @@ public class Enemy extends GameEntities implements Runnable{
     }
 
     public void isEnemyCollidedWithFriends(List<Enemy> friends){
-
-        for(int iter = 0; iter < friends.size(); iter++){
-            Enemy myself = this;
-            Enemy friend = friends.get(iter);
-            if(!myself.equals(friend) && collisionChecker.checkCollision(myself.getRect(), friend.getRect())) {
-                if (collisionChecker.checkIfBounceLeft(myself.getRect(), friend.getRect())) {
+        Enemy myself = this;
+        for(Enemy friend : friends){
+            if(!myself.equals(friend) && collisionChecker.checkCollision(myself.getRect(), friend.getRect()) && !hasFallen) {
+                if (collisionChecker.checkCollisionOnLeft(myself.getRect(), friend.getRect())) {
                     targetTravel = oppositeTravel(GO_UP);
-                } else if (collisionChecker.checkIfBounceRight(myself.getRect(), friend.getRect())) {
+                } else if (collisionChecker.checkCollisionOnRight(myself.getRect(), friend.getRect())) {
                     targetTravel = oppositeTravel(GO_DOWN);
-                } else if(collisionChecker.checkIfBounceUp(this.getRect(),friend.getRect())){
+                } else if(collisionChecker.checkCollisionOnTop(this.getRect(),friend.getRect())){
                     targetTravel = initTravel(GO_UP);
-                }else if(collisionChecker.checkIfBounceDown(this.getRect(),friend.getRect())){
+                }else if(collisionChecker.checkCollisionOnBottom(this.getRect(),friend.getRect())){
                     targetTravel = initTravel(GO_DOWN);
                 }
             }
         }
     }
 
-    public void isCollidedWithClouds(List<Cloud> clouds) {
+    public void isCollidedWithClouds() {
         for (Cloud cloud : clouds){
-            if(this.getRect().intersect(cloud.getRect())){
-                if(collisionChecker.checkIfBounceLeft(this.getRect(),cloud.getRect())){
+            if(this.getRect().intersect(cloud.getRect()) && !hasFallen){
+                if(collisionChecker.checkCollisionOnLeft(this.getRect(),cloud.getRect())){
                     targetTravel = oppositeTravel(GO_UP);
-                }else if(collisionChecker.checkIfBounceRight(this.getRect(),cloud.getRect())){
+                }else if(collisionChecker.checkCollisionOnRight(this.getRect(),cloud.getRect())){
                     targetTravel = oppositeTravel(GO_DOWN);
-                }else if(collisionChecker.checkIfBounceUp(this.getRect(),cloud.getRect())){
+                }else if(collisionChecker.checkCollisionOnTop(this.getRect(),cloud.getRect())){
                     targetTravel = initTravel(GO_UP);
-                }else if(collisionChecker.checkIfBounceDown(this.getRect(),cloud.getRect())){
+                }else if(collisionChecker.checkCollisionOnBottom(this.getRect(),cloud.getRect())){
                     targetTravel = initTravel(GO_DOWN);
                 }
             }
@@ -165,5 +181,9 @@ public class Enemy extends GameEntities implements Runnable{
 
     public void reinitiateFirstTravel() {
         this.targetTravel = initTravel(GO_UP);
+    }
+
+    public void setClouds(List<Cloud> clouds){
+        this.clouds = clouds;
     }
 }
