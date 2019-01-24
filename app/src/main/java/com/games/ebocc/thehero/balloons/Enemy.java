@@ -39,7 +39,7 @@ public class Enemy extends GameEntities{
     public Enemy(int left, int top, SurfaceView view) {
         super(left, top, view);
         this.view = view;
-        this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleftfly);
+        this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
         collisionChecker = new CollisionChecker();
         clouds = new ArrayList<>();
         targetTravel = initTravel(GO_UP);
@@ -51,7 +51,7 @@ public class Enemy extends GameEntities{
 
         for(Cloud cloud : clouds){
             Rect cloudRect = cloud.getRect();
-            if(collisionChecker.checkCollision(rect, cloudRect)&& hasFallen){
+            if(Rect.intersects(this.getRect(), cloudRect)&& hasFallen){
                 intersectedWithCloud = true;
             }
         }
@@ -60,15 +60,11 @@ public class Enemy extends GameEntities{
             if (x > targetX - 50) {
                 x -= xVelocity;
                 if (!hasFallen) {
-                     image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleftfly);
-                }else{
                     image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
                 }
             } else if (x < targetX + 50) {
                 x += xVelocity;
                 if (!hasFallen) {
-                    image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyrightfly);
-                }else {
                     image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
                 }
             }
@@ -113,11 +109,11 @@ public class Enemy extends GameEntities{
 
     public Rect oppositeTravel(int side){
         if(side == 1) {
-            targetX = x + 300;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyrightfly);
+            targetX = x + 200;
+            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
         }else if(side == 2){
-            targetX = x - 300;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleftfly);
+            targetX = x - 200;
+            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
         }
 
         targetY = y;
@@ -129,12 +125,11 @@ public class Enemy extends GameEntities{
 
     public void fall(){
         hasFallen = true;
-        y += 200;
         targetTravel = fallTravel();
     }
 
     public Rect fallTravel() {
-        yVelocity += 3;
+        yVelocity += 5;
         targetX = x + xVelocity;
         targetY = screenHeight + 400;
         Rect rectTravel = new Rect();

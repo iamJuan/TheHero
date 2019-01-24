@@ -2,6 +2,8 @@ package com.games.ebocc.thehero.gameenv;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.SurfaceView;
 
@@ -23,11 +25,15 @@ public class GameEntities {
     }
 
     public void draw(Canvas canvas) {
+        Paint p = new Paint();
+        p.setColor(Color.rgb(255, 255, 255));
+        canvas.drawRect(rect, p);
+
         canvas.drawBitmap(image, x, y, null);
     }
 
     public Rect getRect(){
-        rect.set(x, y, x + image.getWidth(), y + image.getHeight());
+        rect.set(x+20, y+20, x + (image.getWidth()-20), y + (image.getHeight()-20));
         return rect;
     }
 

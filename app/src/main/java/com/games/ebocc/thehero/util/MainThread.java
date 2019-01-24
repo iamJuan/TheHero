@@ -36,14 +36,18 @@ public class MainThread extends Thread{
             startTime = System.nanoTime();
             canvas = null;
 
-            if (prestart > 120) {
+            if (prestart > 240) {
                 this.gameView.gameStart();
+            }else{
+                if(prestart % 80 == 0){
+                    this.gameView.setGameTimer(this.gameView.getGameTimer()-1);
+                }
             }
 
             prestart++;
 
             if(this.gameView.getBalloonFactory() != null && this.gameView.getLEVEL() == 4){
-                if(prestart % 80 == 0){
+                if(prestart % 70 == 0){
                     this.gameView.getBalloonFactory().run();
                 }
             }

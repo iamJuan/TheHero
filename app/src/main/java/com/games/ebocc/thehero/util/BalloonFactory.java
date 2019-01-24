@@ -19,7 +19,7 @@ public class BalloonFactory implements Runnable{
     private final int TUBE_4 = 4;
     private final int PINK_BALLOON = 1;
     private final int BLUE_BALLOON = 2;
-    private final int BALLOON_LIMIT = 30;
+    private final int BALLOON_LIMIT = 20;
 
     private int nBalloon = 0;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -38,7 +38,7 @@ public class BalloonFactory implements Runnable{
         if(nBalloon < BALLOON_LIMIT){
             Balloon balloon = new Balloon(0, screenHeight, view);
             nBalloon++;
-            int whichTube = new Random().nextInt(6) + 1;
+            int whichTube = new Random().nextInt(7) + 1;
 
             switch (whichTube){
                 case TUBE_1:

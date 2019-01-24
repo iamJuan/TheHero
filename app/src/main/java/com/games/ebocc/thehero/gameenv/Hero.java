@@ -195,10 +195,10 @@ public class Hero extends GameEntities{
 
     public Rect oppositeTravel(int side){
         if(side == 1) {
-            targetX = x + 300;
+            targetX = x + 200;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
         }else if(side == 2){
-            targetX = x - 300;
+            targetX = x - 200;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
         }
 
