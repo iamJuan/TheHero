@@ -36,8 +36,12 @@ public class MainThread extends Thread{
             startTime = System.nanoTime();
             canvas = null;
 
-            if (prestart > 120) {
+            if (prestart > 240) {
                 this.gameView.gameStart();
+            }else{
+                if(prestart % 80 == 0){
+                    this.gameView.setGameTimer(this.gameView.getGameTimer()-1);
+                }
             }
 
             prestart++;

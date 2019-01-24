@@ -41,6 +41,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private boolean isGoingUp = false;
 
     private int LEVEL = 1;
+
+    private int gameTimer = 4;
     private int score;
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -180,6 +182,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
+            if(gameTimer > 0){
+                Paint timer = new Paint();
+                if(gameTimer == 3)
+                    timer.setColor(Color.RED);
+                else if(gameTimer == 2)
+                    timer.setColor(Color.YELLOW);
+                else
+                    timer.setColor(Color.GREEN);
+                timer.setTextSize(300);
+                canvas.drawText(gameTimer+"", screenWidth/2, screenHeight/2, timer);
+            }
+
             hero.draw(canvas);
         }
     }
@@ -205,8 +219,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 enemies.remove(enemy);
             }
 
-            enemy.isEnemyCollidedWithFriends(enemies);
             enemy.isCollidedWithClouds();
+            enemy.isEnemyCollidedWithFriends(enemies);
         }
 
         if (isGoingUp) {
@@ -272,5 +286,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public int getLEVEL() {
         return LEVEL;
+    }
+
+    public int getGameTimer() {
+        return gameTimer;
+    }
+
+    public void setGameTimer(int gameTimer) {
+        this.gameTimer = gameTimer;
     }
 }
