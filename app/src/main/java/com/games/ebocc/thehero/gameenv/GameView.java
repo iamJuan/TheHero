@@ -1,14 +1,20 @@
 package com.games.ebocc.thehero.gameenv;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.balloons.Balloon;
@@ -32,7 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private boolean isGoingUp = false;
 
     private int LEVEL = 1;
-
+    private int score;
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
@@ -40,7 +46,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public GameView(Context context) {
         super(context);
-
         thread = new MainThread(getHolder(), this);
 
         hero = new Hero(0, 900, this);
@@ -143,6 +148,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (canvas != null) {
+            Paint text = new Paint();
+            text.setColor(Color.WHITE);
+            text.setTextSize(160);
+            canvas.drawText(score+"", 0, screenHeight-50, text);
 
             for(Cloud cloud : clouds) {
                 cloud.draw(canvas);
@@ -177,7 +186,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         for(Enemy enemy : enemies) {
-            hero.isCollidedWithEnemy(enemy);
+            if(hero.isCollidedWithEnemy(enemy)){
+                updateScore(30);
+            }
 
             if(enemy.getLives() == 0) {
                 enemies.remove(enemy);
@@ -199,7 +210,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(LEVEL == 4){
             for(Balloon balloon : balloonFactory.getBalloons()){
                 balloon.run();
-                hero.isCollidedWithBalloon(balloon);
+                if(hero.isCollidedWithBalloon(balloon)){
+                    updateScore(50);
+                }
                 if(balloon.ifExploded()){
                     balloonFactory.getBalloons().remove(balloon);
                 }
@@ -207,6 +220,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    private void updateScore(int addScore) {
+        score += addScore;
+        Log.d("SCORE", ""+score);
+    }
 
     public void gameStart(){
         for (Enemy enemy : enemies) {

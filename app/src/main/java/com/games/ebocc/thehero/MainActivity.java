@@ -1,6 +1,7 @@
 package com.games.ebocc.thehero;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.games.ebocc.thehero.gameenv.GameView;
 import com.games.ebocc.thehero.gameenv.Hero;
@@ -18,12 +20,12 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout buttons;
     private GameView gameView;
     private FrameLayout game;
+    private Button rightButton;
+    private Button leftButton;
 
     private final int NO_DIRECTION = 0;
     private final int GO_LEFT = 1;
     private final int GO_RIGHT = 2;
-    private Button rightButton;
-    private Button leftButton;
 
     private Hero hero;
 
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        gameView = new GameView(this);
         game = new FrameLayout(this);
 
         buttons = new RelativeLayout(this);
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         leftButton = new Button(this);
         leftButton.setText("<");
         leftButton.setId(92188);
+
+        gameView = new GameView(this);
 
         hero = gameView.getHero();
 
@@ -57,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         RelativeLayout.LayoutParams b2 = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        RelativeLayout.LayoutParams scoreLayout = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 

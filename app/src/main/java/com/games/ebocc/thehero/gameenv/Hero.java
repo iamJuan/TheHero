@@ -94,20 +94,25 @@ public class Hero extends GameEntities {
         }
     }
 
-    public void isCollidedWithEnemy(Enemy enemy) {
+    public boolean isCollidedWithEnemy(Enemy enemy) {
         if(Rect.intersects(this.getRect(),enemy.getRect())){
             bounceUp();
             enemy.setLives(enemy.getLives()-1);
-            if(enemy.getLives() == 1)
+            if(enemy.getLives() == 1) {
                 enemy.fall();
+            }
+            return true;
         }
+        return false;
     }
 
-    public void isCollidedWithBalloon(Balloon balloon){
+    public boolean isCollidedWithBalloon(Balloon balloon){
         if(Rect.intersects(this.getRect(),balloon.getRect())){
             bounceUp();
             balloon.setExploded(true);
+            return true;
         }
+        return false;
     }
 
     public boolean tubeCollisionTop(List<Tube> tubes) {
