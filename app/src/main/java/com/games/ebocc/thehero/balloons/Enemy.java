@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Enemy extends GameEntities implements Runnable{
+public class Enemy extends GameEntities{
 
     private SurfaceView view;
     private CollisionChecker collisionChecker;
@@ -45,7 +45,6 @@ public class Enemy extends GameEntities implements Runnable{
         targetTravel = initTravel(GO_UP);
     }
 
-    @Override
     public void run() {
 
         boolean intersectedWithCloud = false;

@@ -226,7 +226,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private void updateScore(int addScore) {
         score += addScore;
-        Log.d("SCORE", ""+score);
     }
 
     public void gameStart(){

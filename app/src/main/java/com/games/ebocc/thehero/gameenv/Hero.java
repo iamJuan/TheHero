@@ -12,7 +12,7 @@ import com.games.ebocc.thehero.util.CollisionChecker;
 
 import java.util.List;
 
-public class Hero extends GameEntities implements Runnable{
+public class Hero extends GameEntities{
 
     private CollisionChecker collisionChecker;
 
@@ -26,10 +26,6 @@ public class Hero extends GameEntities implements Runnable{
     private boolean isGoingRight = false;
     private boolean hasDirection = false;
     private boolean isOnTravel = false;
-
-    private final int NO_DIRECTION = 0;
-    private final int GO_LEFT = 1;
-    private final int GO_RIGHT = 2;
 
     private Rect targetTravel;
 
@@ -88,6 +84,11 @@ public class Hero extends GameEntities implements Runnable{
     }
 
     public void maneuverHero(int direction){
+
+        final int NO_DIRECTION = 0;
+        final int GO_LEFT = 1;
+        final int GO_RIGHT = 2;
+
         switch (direction){
             case GO_RIGHT:
                 isGoingRight = true;
@@ -132,9 +133,17 @@ public class Hero extends GameEntities implements Runnable{
 
     public boolean isCollidedWithBalloon(Balloon balloon){
         if(Rect.intersects(this.getRect(),balloon.getRect())){
-            bounceUp();
-            balloon.setExploded(true);
-            return true;
+            if(collisionChecker.checkCollisionOnTop(this.getRect(), balloon.getRect())){
+                bounceUp();
+                balloon.setExploded(true);
+                return true;
+            }else if(collisionChecker.checkCollisionOnLeft(this.getRect(), balloon.getRect())){
+                targetTravel = oppositeTravel(2);
+                isOnTravel = true;
+            }else if(collisionChecker.checkCollisionOnRight(this.getRect(), balloon.getRect())){
+                targetTravel = oppositeTravel(1);
+                isOnTravel = true;
+            }
         }
         return false;
     }
@@ -166,7 +175,6 @@ public class Hero extends GameEntities implements Runnable{
         return false;
     }
 
-    @Override
     public void run() {
         if (x > targetX - 50) {
             x -= xVelocity;
@@ -188,8 +196,10 @@ public class Hero extends GameEntities implements Runnable{
     public Rect oppositeTravel(int side){
         if(side == 1) {
             targetX = x + 300;
+            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
         }else if(side == 2){
             targetX = x - 300;
+            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
         }
 
         targetY = y;
