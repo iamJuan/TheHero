@@ -1,7 +1,6 @@
 package com.games.ebocc.thehero;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.games.ebocc.thehero.gameenv.GameView;
 import com.games.ebocc.thehero.gameenv.Hero;

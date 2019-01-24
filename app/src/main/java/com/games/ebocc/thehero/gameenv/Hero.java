@@ -175,6 +175,15 @@ public class Hero extends GameEntities{
         return false;
     }
 
+    public void cloudCollisionLeft(List<Cloud> clouds) {
+        for(Cloud cloud : clouds){
+            Rect cloudRect = cloud.getRect();
+            if(Rect.intersects(this.getRect(), cloudRect) && collisionChecker.checkCollisionOnLeftWithNonMovingObjects(this.getRect(), cloudRect))
+                targetTravel = oppositeTravel(2);
+                isOnTravel = true;
+        }
+    }
+
     public void run() {
         if (x > targetX - 50) {
             x -= xVelocity;

@@ -1,25 +1,15 @@
 package com.games.ebocc.thehero.gameenv;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.balloons.Balloon;
 import com.games.ebocc.thehero.balloons.Enemy;
 import com.games.ebocc.thehero.util.BalloonFactory;
@@ -205,6 +195,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             LEVEL++;
             initStage(LEVEL);
         }
+
+        hero.direction();
 
         if(hero.getIsOnTravel()){
             hero.run();

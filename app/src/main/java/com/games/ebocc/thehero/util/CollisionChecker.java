@@ -29,4 +29,8 @@ public class CollisionChecker {
     public boolean checkCollisionOnBottomWithNonMovingObjects(Rect rectA, Rect rectB){
         return rectA.bottom >= rectB.bottom;
     }
+
+    public boolean checkCollisionOnLeftWithNonMovingObjects(Rect rectA, Rect rectB){
+        return (rectA.right < rectB.right && rectA.left < rectB.left);
+    }
 }

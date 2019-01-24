@@ -1,7 +1,6 @@
 package com.games.ebocc.thehero.util;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.games.ebocc.thehero.gameenv.GameView;
@@ -56,7 +55,6 @@ public class MainThread extends Thread{
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized(surfaceHolder) {
                     this.gameView.update();
-                    this.gameView.getHero().direction();
                     this.gameView.draw(canvas);
                 }
             } catch (Exception e) {       }
