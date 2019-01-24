@@ -185,6 +185,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             initStage(LEVEL);
         }
 
+        if(hero.getIsOnTravel()){
+            hero.run();
+        }
+
         for(Enemy enemy : enemies) {
             if(hero.isCollidedWithEnemy(enemy)){
                 updateScore(30);
