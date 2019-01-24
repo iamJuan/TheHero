@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Enemy extends GameEntities implements Runnable{
+public class Enemy extends GameEntities{
 
     private SurfaceView view;
     private CollisionChecker collisionChecker;
@@ -45,7 +45,6 @@ public class Enemy extends GameEntities implements Runnable{
         targetTravel = initTravel(GO_UP);
     }
 
-    @Override
     public void run() {
 
         boolean intersectedWithCloud = false;
@@ -114,10 +113,10 @@ public class Enemy extends GameEntities implements Runnable{
 
     public Rect oppositeTravel(int side){
         if(side == 1) {
-            targetX = x + 500;
+            targetX = x + 300;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyrightfly);
         }else if(side == 2){
-            targetX = x - 500;
+            targetX = x - 300;
             image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleftfly);
         }
 
@@ -191,5 +190,9 @@ public class Enemy extends GameEntities implements Runnable{
 
     public void setClouds(List<Cloud> clouds){
         this.clouds = clouds;
+    }
+
+    public void setTargetTravel(int side){
+        targetTravel = oppositeTravel(side);
     }
 }

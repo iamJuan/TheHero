@@ -9,11 +9,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.games.ebocc.thehero.R;
@@ -46,6 +49,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public GameView(Context context) {
         super(context);
+
+
         thread = new MainThread(getHolder(), this);
 
         hero = new Hero(0, 900, this);
@@ -148,8 +153,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (canvas != null) {
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+
             Paint text = new Paint();
-            text.setColor(Color.WHITE);
+            text.setColor(Color.BLUE);
             text.setTextSize(160);
             canvas.drawText(score+"", 0, screenHeight-50, text);
 
@@ -183,6 +190,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             setGameStarted(false);
             LEVEL++;
             initStage(LEVEL);
+        }
+
+        if(hero.getIsOnTravel()){
+            hero.run();
         }
 
         for(Enemy enemy : enemies) {
@@ -222,7 +233,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private void updateScore(int addScore) {
         score += addScore;
-        Log.d("SCORE", ""+score);
     }
 
     public void gameStart(){

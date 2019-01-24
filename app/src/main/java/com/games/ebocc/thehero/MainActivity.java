@@ -2,6 +2,7 @@ package com.games.ebocc.thehero;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RelativeLayout buttons;
     private GameView gameView;
+    private ImageView bgView;
     private FrameLayout game;
     private Button rightButton;
     private Button leftButton;
@@ -81,8 +83,21 @@ public class MainActivity extends AppCompatActivity {
         leftButton.setLayoutParams(b1);
         rightButton.setLayoutParams(b2);
 
-        game.addView(gameView);
-        game.addView(buttons);
+        gameView.setZOrderOnTop(true);
+        gameView.getHolder().setFormat(PixelFormat.TRANSPARENT);
+
+        bgView = new ImageView(this);
+        bgView.setBackgroundResource(R.drawable.sky);
+
+        RelativeLayout.LayoutParams fillParentLayout = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+        RelativeLayout rootPanel = new RelativeLayout(this);
+        rootPanel.setLayoutParams(fillParentLayout);
+        rootPanel.addView(gameView, fillParentLayout);
+        rootPanel.addView(bgView, fillParentLayout);
+        rootPanel.addView(buttons, fillParentLayout);
+
+        game.addView(rootPanel);
 
         setContentView(game);
     }
