@@ -25,10 +25,6 @@ public class GameEntities {
     }
 
     public void draw(Canvas canvas) {
-        Paint p = new Paint();
-        p.setColor(Color.rgb(255, 255, 255));
-        canvas.drawRect(rect, p);
-
         canvas.drawBitmap(image, x, y, null);
     }
 

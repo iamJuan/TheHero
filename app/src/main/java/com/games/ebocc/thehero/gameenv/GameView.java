@@ -36,7 +36,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private BalloonFactory balloonFactory;
     private List<Cloud> clouds;
     private List<Enemy> enemies;
-    private List<Tube> tubes;
 
     private boolean isGoingUp = false;
 
@@ -57,7 +56,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         hero = new Hero(0, 900, this);
         clouds = new ArrayList<>();
         enemies = new ArrayList<>();
-        tubes = new ArrayList<>();
 
         initStage(LEVEL);
 
@@ -109,11 +107,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 hero.setX(0);
                 hero.setY(100);
                 clouds.add(new Cloud(0, 300, this));
-
-                tubes.add(new Tube(500, screenHeight - 300, this));
-                tubes.add(new Tube(1000, screenHeight - 300, this));
-                tubes.add(new Tube(1500, screenHeight - 300, this));
-                tubes.add(new Tube(2000, screenHeight - 300, this));
 
                 balloonFactory = new BalloonFactory(this);
                 break;
@@ -175,10 +168,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         balloon.draw(canvas);
                     }
                 }
-
-                for(Tube tube : tubes){
-                    tube.draw(canvas);
-                }
             }
 
             if(gameTimer > 0){
@@ -226,8 +215,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (!hero.cloudCollisionBottom(clouds))
                 hero.goUp();
         }else {
-            if(!hero.cloudCollisionTop(clouds)
-                    && !hero.tubeCollisionTop(tubes))
+            if(!hero.cloudCollisionTop(clouds))
                 hero.goDown();
         }
 
