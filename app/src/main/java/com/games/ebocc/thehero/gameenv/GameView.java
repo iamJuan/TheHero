@@ -52,7 +52,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public GameView(Context context) {
         super(context);
 
-
         thread = new MainThread(getHolder(), this);
 
         hero = new Hero(0, 900, this);
