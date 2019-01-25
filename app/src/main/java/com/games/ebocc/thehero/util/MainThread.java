@@ -44,13 +44,17 @@ public class MainThread extends Thread{
                 }
             }
 
-            prestart++;
-
             if(this.gameView.getBalloonFactory() != null && this.gameView.getLEVEL() == 4){
                 if(prestart % 70 == 0){
                     this.gameView.getBalloonFactory().run();
                 }
             }
+
+            if(prestart % 10 == 0){
+                this.gameView.getHero().run();
+            }
+
+            prestart++;
 
             try {
                 canvas = this.surfaceHolder.lockCanvas();
