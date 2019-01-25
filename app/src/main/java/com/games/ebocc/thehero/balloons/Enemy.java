@@ -3,6 +3,7 @@ package com.games.ebocc.thehero.balloons;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
@@ -21,6 +22,9 @@ public class Enemy extends GameEntities{
     private List<Cloud> clouds;
 
     private boolean hasFallen = false;
+    private boolean isGoingUp = false;
+    private boolean isGoingRight = false;
+    private boolean isImageUp = false;
 
     private Rect targetTravel;
 
@@ -39,13 +43,13 @@ public class Enemy extends GameEntities{
     public Enemy(int left, int top, SurfaceView view) {
         super(left, top, view);
         this.view = view;
-        this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.enemyleft);
         collisionChecker = new CollisionChecker();
         clouds = new ArrayList<>();
         targetTravel = initTravel(GO_UP);
+        this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
     }
 
-    public void run() {
+    public void move() {
 
         boolean intersectedWithCloud = false;
 
@@ -59,14 +63,8 @@ public class Enemy extends GameEntities{
         if(!intersectedWithCloud) {
             if (x > targetX - 50) {
                 x -= xVelocity;
-                if (!hasFallen) {
-                    image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
-                }
             } else if (x < targetX + 50) {
                 x += xVelocity;
-                if (!hasFallen) {
-                    image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
-                }
             }
 
             if (y > targetY) {
@@ -79,7 +77,6 @@ public class Enemy extends GameEntities{
                 lives--;
             }
         }
-
 
         if(Rect.intersects(rect, targetTravel) && !hasFallen){
             targetTravel = justTravel();
@@ -110,10 +107,8 @@ public class Enemy extends GameEntities{
     public Rect oppositeTravel(int side){
         if(side == 1) {
             targetX = x + 200;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
         }else if(side == 2){
             targetX = x - 200;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
         }
 
         targetY = y;
@@ -189,5 +184,47 @@ public class Enemy extends GameEntities{
 
     public void setTargetTravel(int side){
         targetTravel = oppositeTravel(side);
+    }
+
+    private void flapEffectBooleans() {
+        if(targetY < y){
+            isGoingUp = true;
+        }else{
+            isGoingUp = false;
+        }
+
+        if(targetX > x){
+            isGoingRight = true;
+        }else{
+            isGoingRight = false;
+        }
+    }
+
+    public void run() {
+        Log.d("ENEMY", "Im flying");
+        flapEffectBooleans();
+
+        if(isGoingUp){
+            if(isGoingRight){
+                if(isImageUp) {
+                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidarightdown);
+                }else {
+                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
+                }
+                isImageUp = !isImageUp;
+            }else{
+                if(isImageUp) {
+                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
+                }else {
+                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
+                }
+                isImageUp = !isImageUp;
+            }
+        }else{
+            if(isGoingRight)
+                this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidarightdown);
+            else
+                this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
+        }
     }
 }

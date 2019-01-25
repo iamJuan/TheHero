@@ -13,7 +13,7 @@ import com.games.ebocc.thehero.util.CollisionChecker;
 
 import java.util.List;
 
-public class Hero extends GameEntities implements Runnable{
+public class Hero extends GameEntities{
 
     private CollisionChecker collisionChecker;
 
@@ -48,11 +48,6 @@ public class Hero extends GameEntities implements Runnable{
 
     public void goDown(){
         isGoingUp =false;
-        if(isGoingRight){
-            this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidarightdown);
-        }else{
-            this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
-        }
 
         if (y < screenHeight - image.getHeight()  && !isOnTravel) {
             y += yVelocity + 2;
@@ -62,7 +57,6 @@ public class Hero extends GameEntities implements Runnable{
     public void goRight(){
         if(!isOnTravel) {
             x += xVelocity;
-            this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
             if (x > screenWidth) {
                 x = -100;
             }
@@ -72,7 +66,6 @@ public class Hero extends GameEntities implements Runnable{
     public void goLeft() {
         if(!isOnTravel) {
             x -= xVelocity;
-            this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
             if(x < -100){
                 x = screenWidth;
             }
@@ -203,12 +196,14 @@ public class Hero extends GameEntities implements Runnable{
     }
 
     public Rect oppositeTravel(int side){
-        if(side == 1) {
+        final int RIGHT = 1;
+        final int LEFT = 2;
+        if(side == RIGHT) {
             targetX = x + 200;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
-        }else if(side == 2){
+            this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidarightdown);
+        }else if(side == LEFT){
             targetX = x - 200;
-            image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
+            this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
         }
 
         targetY = y;
@@ -218,7 +213,6 @@ public class Hero extends GameEntities implements Runnable{
         return rectTravel;
     }
 
-    @Override
     public void run() {
         Log.d("HERO", "Im flying");
         if(isGoingUp){
@@ -236,6 +230,11 @@ public class Hero extends GameEntities implements Runnable{
                     this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
                 isImageUp = !isImageUp;
             }
+        }else{
+            if(isGoingRight)
+                this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidarightdown);
+            else
+                this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
         }
     }
 }

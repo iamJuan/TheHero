@@ -52,6 +52,7 @@ public class MainThread extends Thread{
 
             if(prestart % 10 == 0){
                 this.gameView.getHero().run();
+                this.gameView.enemyfly();
             }
 
             prestart++;

@@ -228,9 +228,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void gameStart(){
         for (Enemy enemy : enemies) {
-            enemy.run();
+            enemy.move();
         }
         setGameStarted(true);
+    }
+
+    public void enemyfly(){
+        for (Enemy enemy : enemies) {
+            enemy.run();
+        }
     }
 
     public void setGameStarted(boolean gameStarted) {
