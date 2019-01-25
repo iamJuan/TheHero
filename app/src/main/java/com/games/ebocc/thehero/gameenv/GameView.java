@@ -234,13 +234,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void enemyfly(){
-        for (Enemy enemy : enemies) {
-            enemy.run();
+        if(isGameStarted) {
+            for (Enemy enemy : enemies) {
+                enemy.run();
+            }
         }
     }
 
     public void setGameStarted(boolean gameStarted) {
         isGameStarted = gameStarted;
+        hero.setGameStarted(isGameStarted);
     }
 
     @Override

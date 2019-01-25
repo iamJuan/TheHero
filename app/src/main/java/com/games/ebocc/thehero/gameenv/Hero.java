@@ -30,13 +30,16 @@ public class Hero extends GameEntities{
     private boolean isGoingUp = false;
     private boolean isImageUp = false;
 
+    private boolean isGameStarted = false;
+
     private Rect targetTravel;
 
     public Hero(int left, int top, SurfaceView view) {
         super(left, top, view);
         collisionChecker = new CollisionChecker();
-        this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
         targetTravel = null;
+        this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
+        isGoingRight = true;
     }
 
     public void goUp(){
@@ -86,24 +89,25 @@ public class Hero extends GameEntities{
     }
 
     public void maneuverHero(int direction){
+        if(isGameStarted) {
+            final int NO_DIRECTION = 0;
+            final int GO_LEFT = 1;
+            final int GO_RIGHT = 2;
 
-        final int NO_DIRECTION = 0;
-        final int GO_LEFT = 1;
-        final int GO_RIGHT = 2;
+            switch (direction) {
+                case GO_RIGHT:
+                    isGoingRight = true;
+                    hasDirection = true;
+                    break;
+                case GO_LEFT:
+                    isGoingRight = false;
+                    hasDirection = true;
+                    break;
+                case NO_DIRECTION:
+                    hasDirection = false;
+                    break;
 
-        switch (direction){
-            case GO_RIGHT:
-                isGoingRight = true;
-                hasDirection = true;
-                break;
-            case GO_LEFT:
-                isGoingRight = false;
-                hasDirection = true;
-                break;
-            case NO_DIRECTION:
-                hasDirection = false;
-                break;
-
+            }
         }
     }
 
@@ -175,6 +179,10 @@ public class Hero extends GameEntities{
                 return true;
         }
         return false;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        isGameStarted = gameStarted;
     }
 
     public void move() {
