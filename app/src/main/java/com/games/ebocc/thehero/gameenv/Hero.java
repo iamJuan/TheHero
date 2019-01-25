@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.R;
-import com.games.ebocc.thehero.balloons.Balloon;
+import com.games.ebocc.thehero.balloons.Floater;
 import com.games.ebocc.thehero.balloons.Enemy;
 import com.games.ebocc.thehero.util.CollisionChecker;
 
@@ -24,11 +24,12 @@ public class Hero extends GameEntities{
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-    private boolean isGoingRight = false;
+    private boolean isGoingRight;
     private boolean hasDirection = false;
     private boolean isOnTravel = false;
     private boolean isGoingUp = false;
     private boolean isImageUp = false;
+    private boolean willStay = false;
 
     private boolean isGameStarted = false;
 
@@ -137,16 +138,21 @@ public class Hero extends GameEntities{
         return isOnTravel;
     }
 
-    public boolean isCollidedWithBalloon(Balloon balloon){
-        if(Rect.intersects(this.getRect(),balloon.getRect())){
-            if(collisionChecker.checkCollisionOnTop(this.getRect(), balloon.getRect())){
+    public void setOnTravel(){
+        isGoingUp = true;
+        isOnTravel = true;
+    }
+
+    public boolean isCollidedWithBalloon(Floater floater){
+        if(Rect.intersects(this.getRect(), floater.getRect())){
+            if(collisionChecker.checkCollisionOnTop(this.getRect(), floater.getRect())){
                 bounceUp();
-                balloon.setExploded(true);
+                floater.setExploded(true);
                 return true;
-            }else if(collisionChecker.checkCollisionOnLeft(this.getRect(), balloon.getRect())){
+            }else if(collisionChecker.checkCollisionOnLeft(this.getRect(), floater.getRect())){
                 targetTravel = oppositeTravel(2);
                 isOnTravel = true;
-            }else if(collisionChecker.checkCollisionOnRight(this.getRect(), balloon.getRect())){
+            }else if(collisionChecker.checkCollisionOnRight(this.getRect(), floater.getRect())){
                 targetTravel = oppositeTravel(1);
                 isOnTravel = true;
             }
@@ -244,5 +250,14 @@ public class Hero extends GameEntities{
             else
                 this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
         }
+    }
+
+    public void goToFinal() {
+        targetX = 100;
+        targetY = 100;
+        Rect rectTravel = new Rect();
+        rectTravel.set(targetX, targetY,targetX+100, targetY+100);
+
+        targetTravel = rectTravel;
     }
 }

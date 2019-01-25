@@ -10,9 +10,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.games.ebocc.thehero.balloons.Balloon;
+import com.games.ebocc.thehero.balloons.Floater;
 import com.games.ebocc.thehero.balloons.Enemy;
-import com.games.ebocc.thehero.util.BalloonFactory;
+import com.games.ebocc.thehero.util.FloatingObjectsFactory;
 import com.games.ebocc.thehero.util.MainThread;
 
 import java.util.ArrayList;
@@ -23,13 +23,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
 
     private Hero hero;
-    private BalloonFactory balloonFactory;
+    private FloatingObjectsFactory floatingObjectsFactory;
     private List<Cloud> clouds;
     private List<Enemy> enemies;
 
     private boolean isGoingUp = false;
 
-    private int LEVEL = 1;
+    private int LEVEL = 5;
 
     private int gameTimer = 4;
     private int score;
@@ -37,6 +37,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
     private boolean isGameStarted = false;
+    private boolean isFinalStage = false;
 
     public GameView(Context context) {
         super(context);
@@ -98,7 +99,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 hero.setY(100);
                 clouds.add(new Cloud(0, 300, this));
 
-                balloonFactory = new BalloonFactory(this);
+                floatingObjectsFactory = new FloatingObjectsFactory(this);
+                floatingObjectsFactory.setIfBalloon(true);
+                break;
+
+            case 5:
+                hero.goToFinal();
+                hero.setOnTravel();
+                isFinalStage = true;
+
+                floatingObjectsFactory = new FloatingObjectsFactory(this);
+                floatingObjectsFactory.setIfBalloon(false);
+
                 break;
         }
 
@@ -152,10 +164,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 enemy.draw(canvas);
             }
 
-            if(LEVEL == 4){
-                if(balloonFactory != null){
-                    for(Balloon balloon : balloonFactory.getBalloons()){
-                        balloon.draw(canvas);
+            if(LEVEL >= 4){
+                if(floatingObjectsFactory != null){
+                    for(Floater floater : floatingObjectsFactory.getFloaters()){
+                        floater.draw(canvas);
                     }
                 }
             }
@@ -177,7 +189,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        if(enemies.size() < 1 && LEVEL < 4){
+        if(enemies.size() < 1 && LEVEL < 4 && !isFinalStage){
             clouds.clear();
             setGameStarted(false);
             LEVEL++;
@@ -205,19 +217,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (!hero.cloudCollisionBottom(clouds))
                 hero.goUp();
         }else {
-            if(!hero.cloudCollisionTop(clouds))
+            if(!hero.cloudCollisionTop(clouds) && !isFinalStage)
                 hero.goDown();
         }
 
         if(LEVEL == 4){
-            for(Balloon balloon : balloonFactory.getBalloons()){
-                balloon.run();
-                if(hero.isCollidedWithBalloon(balloon)){
+            for(Floater floater : floatingObjectsFactory.getFloaters()){
+                floater.run();
+                if(hero.isCollidedWithBalloon(floater)){
                     updateScore(50);
                 }
-                if(balloon.ifExploded()){
-                    balloonFactory.getBalloons().remove(balloon);
+                if(floater.ifExploded()){
+                    floatingObjectsFactory.getFloaters().remove(floater);
                 }
+
+                if(floatingObjectsFactory.getFloaters().size() < 1){
+                    clouds.clear();
+                    LEVEL++;
+                    initStage(LEVEL);
+                }
+            }
+        }
+
+        if(LEVEL == 5){
+            for(Floater floater : floatingObjectsFactory.getFloaters()) {
+                floater.run();
             }
         }
     }
@@ -266,8 +290,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return hero;
     }
 
-    public BalloonFactory getBalloonFactory(){
-        return balloonFactory;
+    public FloatingObjectsFactory getFloatingObjectsFactory(){
+        return floatingObjectsFactory;
     }
 
     public int getLEVEL() {

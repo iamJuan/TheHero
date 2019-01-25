@@ -1,7 +1,6 @@
 package com.games.ebocc.thehero.util;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.games.ebocc.thehero.gameenv.GameView;
@@ -44,9 +43,10 @@ public class MainThread extends Thread{
                 }
             }
 
-            if(this.gameView.getBalloonFactory() != null && this.gameView.getLEVEL() == 4){
+            if(this.gameView.getFloatingObjectsFactory() != null && this.gameView.getLEVEL() >= 4 ){
+
                 if(prestart % 70 == 0){
-                    this.gameView.getBalloonFactory().run();
+                    this.gameView.getFloatingObjectsFactory().run();
                 }
             }
 

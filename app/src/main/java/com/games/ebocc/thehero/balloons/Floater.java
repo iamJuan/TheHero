@@ -6,12 +6,14 @@ import android.view.SurfaceView;
 import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.gameenv.GameEntities;
 
-public class Balloon extends GameEntities implements Runnable{
+public class Floater extends GameEntities implements Runnable{
 
-    private int yVelocity = 7;
+    private int yVelocity = 5;
     private boolean exploded = false;
 
-    public Balloon(int left, int top, SurfaceView view) {
+    private int yLimit = 0;
+
+    public Floater(int left, int top, SurfaceView view) {
         super(left, top, view);
         this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.bubblepink);
     }
@@ -19,11 +21,11 @@ public class Balloon extends GameEntities implements Runnable{
     @Override
     public void run() {
 
-        if (y > -400) {
+        if (y > yLimit) {
             y -= yVelocity;
         }
 
-        if(y <= -400){
+        if(y <= yLimit){
             exploded = true;
         }
     }
@@ -34,5 +36,9 @@ public class Balloon extends GameEntities implements Runnable{
 
     public void setExploded(boolean exploded){
         this.exploded = exploded;
+    }
+
+    public void setyLimit(int yLimit) {
+        this.yLimit = yLimit;
     }
 }
