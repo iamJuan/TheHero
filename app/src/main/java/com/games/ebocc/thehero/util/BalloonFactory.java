@@ -63,10 +63,10 @@ public class BalloonFactory implements Runnable{
 
             switch (whichColor){
                 case PINK_BALLOON:
-                    balloon.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.pinkballoon));
+                    balloon.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
                     break;
                 case BLUE_BALLOON:
-                    balloon.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.blueballoon));
+                    balloon.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubbleblue));
                     break;
             }
 

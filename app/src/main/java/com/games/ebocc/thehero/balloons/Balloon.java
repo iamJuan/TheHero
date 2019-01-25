@@ -13,7 +13,7 @@ public class Balloon extends GameEntities implements Runnable{
 
     public Balloon(int left, int top, SurfaceView view) {
         super(left, top, view);
-        this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.pinkballoon);
+        this.image = BitmapFactory.decodeResource(view.getResources(),R.drawable.bubblepink);
     }
 
     @Override
