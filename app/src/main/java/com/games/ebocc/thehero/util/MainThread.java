@@ -46,7 +46,13 @@ public class MainThread extends Thread{
             if(this.gameView.getFloatingObjectsFactory() != null && this.gameView.getLEVEL() >= 4 ){
 
                 if(prestart % 70 == 0){
-                    this.gameView.getFloatingObjectsFactory().run();
+                    this.gameView.getFloatingObjectsFactory().generate();
+                }
+            }
+
+            if(this.gameView.getLEVEL() == 6){
+                if(prestart % 60 == 0){
+                    this.gameView.getFloatingObjectsFactory().generate();
                 }
             }
 
@@ -54,6 +60,9 @@ public class MainThread extends Thread{
                 this.gameView.getHero().run();
                 this.gameView.enemyfly();
             }
+
+            if(this.gameView.getLEVEL() == 6)
+                this.gameView.setMsgDelay();
 
             prestart++;
 

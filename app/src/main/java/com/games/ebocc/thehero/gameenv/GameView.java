@@ -12,6 +12,8 @@ import android.view.SurfaceView;
 
 import com.games.ebocc.thehero.balloons.Floater;
 import com.games.ebocc.thehero.balloons.Enemy;
+import com.games.ebocc.thehero.balloons.Message;
+import com.games.ebocc.thehero.util.CharFactory;
 import com.games.ebocc.thehero.util.FloatingObjectsFactory;
 import com.games.ebocc.thehero.util.MainThread;
 
@@ -24,13 +26,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Hero hero;
     private FloatingObjectsFactory floatingObjectsFactory;
+    private CharFactory charFactory;
     private List<Cloud> clouds;
     private List<Enemy> enemies;
 
     private boolean isGoingUp = false;
 
-    private int LEVEL = 5;
-
+    private int LEVEL = 4;
+    private int popBalloon = 0;
     private int gameTimer = 4;
     private int score;
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -38,6 +41,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private boolean isGameStarted = false;
     private boolean isFinalStage = false;
+
+    private int msgDelay = 20;
 
     public GameView(Context context) {
         super(context);
@@ -110,8 +115,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                 floatingObjectsFactory = new FloatingObjectsFactory(this);
                 floatingObjectsFactory.setIfBalloon(false);
-
                 break;
+
+            case 6:
+                charFactory = new CharFactory(this);
+                for(int index = 0; index < floatingObjectsFactory.getFloaters().size(); index++) {
+                    Floater floater = floatingObjectsFactory.getFloaters().get(index);
+                    charFactory.generate(floater.x, floater.y, index);
+                }
+                break;
+
         }
 
         for(Enemy enemy : enemies){
@@ -184,6 +197,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText(gameTimer+"", screenWidth/2, screenHeight/2, timer);
             }
 
+            if(LEVEL == 6){
+                for (Message message : charFactory.getMessages()) {
+                    message.draw(canvas);
+                }
+            }
+
             hero.draw(canvas);
         }
     }
@@ -242,6 +261,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(LEVEL == 5){
             for(Floater floater : floatingObjectsFactory.getFloaters()) {
                 floater.run();
+            }
+
+            if(floatingObjectsFactory.getFloaters().size() >= 22){
+                if(floatingObjectsFactory.shouldGoToNextLevel()){
+                    LEVEL++;
+                    initStage(LEVEL);
+                }
+            }
+        }
+
+        if(LEVEL == 6){
+            if(msgDelay == 0) {
+                charFactory.getMessages().get(popBalloon).appear(true);
+                floatingObjectsFactory.getFloaters().remove(0);
+                popBalloon++;
+                msgDelay = 30;
             }
         }
     }
@@ -304,5 +339,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void setGameTimer(int gameTimer) {
         this.gameTimer = gameTimer;
+    }
+
+    public void setMsgDelay() {
+        this.msgDelay--;
     }
 }

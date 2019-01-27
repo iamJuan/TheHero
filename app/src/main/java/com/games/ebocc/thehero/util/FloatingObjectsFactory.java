@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class FloatingObjectsFactory implements Runnable{
+public class FloatingObjectsFactory{
 
     private final int TUBE_1 = 1;
     private final int TUBE_2 = 2;
@@ -19,7 +19,7 @@ public class FloatingObjectsFactory implements Runnable{
     private final int TUBE_4 = 4;
     private final int PINK_BALLOON = 1;
     private final int BLUE_BALLOON = 2;
-    private final int BALLOON_LIMIT = 15;
+    private final int BALLOON_LIMIT = 1;
 
     private int nBalloon = 0;
     private int nHeart = 0;
@@ -30,19 +30,18 @@ public class FloatingObjectsFactory implements Runnable{
     private List<Floater> floaters;
 
     private boolean ifBalloon = false;
+    private boolean shouldGoToNextLevel = false;
 
     public FloatingObjectsFactory(SurfaceView view){
         this.view = view;
         floaters = new ArrayList<>();
     }
 
-    @Override
-    public void run() {
+    public void generate() {
         Floater floater = new Floater(0, screenHeight, view);
         if(ifBalloon){
             if(nBalloon < BALLOON_LIMIT){
-                nBalloon++;
-                int bound = 0;
+                int bound;
 
                 if(nBalloon == 0){
                     bound = 3;
@@ -51,6 +50,7 @@ public class FloatingObjectsFactory implements Runnable{
                 }
 
                 int whichTube = new Random().nextInt(bound) + 1;
+                nBalloon++;
 
                 switch (whichTube){
                     case TUBE_1:
@@ -90,42 +90,147 @@ public class FloatingObjectsFactory implements Runnable{
             if(nHeart == 0){
                 floater = new Floater(0, screenHeight, view);
                 floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
-                floater.setyLimit(200);
-                floater.setX(570);
+                floater.setyLimit(100);
+                floater.setX(770);
                 floaters.add(floater);
 
                 floater = new Floater(0, screenHeight, view);
                 floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
-                floater.setyLimit(200);
-                floater.setX(870);
+                floater.setyLimit(100);
+                floater.setX(970);
                 floaters.add(floater);
                 nHeart+=2;
 
             }else if(nHeart == 2){
                 floater = new Floater(0, screenHeight, view);
                 floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
-                floater.setyLimit(400);
-                floater.setX(570);
+                floater.setyLimit(300);
+                floater.setX(770);
                 floaters.add(floater);
 
                 floater = new Floater(0, screenHeight, view);
                 floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
-                floater.setyLimit(400);
-                floater.setX(870);
+                floater.setyLimit(300);
+                floater.setX(970);
                 floaters.add(floater);
 
                 floater = new Floater(0, screenHeight, view);
                 floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
-                floater.setyLimit(400);
+                floater.setyLimit(300);
                 floater.setX(1170);
                 floaters.add(floater);
 
                 floater = new Floater(0, screenHeight, view);
                 floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
-                floater.setyLimit(400);
-                floater.setX(1470);
+                floater.setyLimit(300);
+                floater.setX(1370);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(300);
+                floater.setX(1570);
                 floaters.add(floater);
                 nHeart+=4;
+            }else if(nHeart == 6){
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(500);
+                floater.setX(770);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(500);
+                floater.setX(970);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(500);
+                floater.setX(1170);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(500);
+                floater.setX(1370);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(500);
+                floater.setX(1670);
+                floaters.add(floater);
+                nHeart+=5;
+            }else if(nHeart == 11){
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(700);
+                floater.setX(770);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(700);
+                floater.setX(970);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(700);
+                floater.setX(1170);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(700);
+                floater.setX(1370);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(700);
+                floater.setX(1570);
+                floaters.add(floater);
+                nHeart+=5;
+            }else if(nHeart == 16){
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(900);
+                floater.setX(770);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(900);
+                floater.setX(970);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(900);
+                floater.setX(1170);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(900);
+                floater.setX(1370);
+                floaters.add(floater);
+
+                floater = new Floater(0, screenHeight, view);
+                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.bubblepink));
+                floater.setyLimit(900);
+                floater.setX(1570);
+                floaters.add(floater);
+                nHeart+=5;
+            }else if(nHeart >= 21){
+                if(!shouldGoToNextLevel) {
+                    if (floaters.get(nHeart).getRect().top <= 920) {
+                        shouldGoToNextLevel = true;
+                    }
+                }
             }
         }
     }
@@ -136,5 +241,9 @@ public class FloatingObjectsFactory implements Runnable{
 
     public void setIfBalloon(boolean ifBalloon) {
         this.ifBalloon = ifBalloon;
+    }
+
+    public boolean shouldGoToNextLevel(){
+        return shouldGoToNextLevel;
     }
 }
