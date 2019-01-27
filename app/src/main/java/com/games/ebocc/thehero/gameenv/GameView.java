@@ -6,10 +6,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.games.ebocc.thehero.R;
 import com.games.ebocc.thehero.balloons.Floater;
 import com.games.ebocc.thehero.balloons.Enemy;
 import com.games.ebocc.thehero.balloons.Message;
@@ -32,7 +35,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private boolean isGoingUp = false;
 
-    private int LEVEL = 4;
+    private int LEVEL = 1;
     private int popBalloon = 0;
     private int gameTimer = 4;
     private int score;
@@ -44,9 +47,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private int msgDelay = 20;
 
+    private Typeface tf;
+    private MediaPlayer theme;
+    private MediaPlayer pop;
+    private MediaPlayer gametheme;
+
     public GameView(Context context) {
         super(context);
-
+        tf = Typeface.createFromAsset(context.getAssets(),"font/myfont.ttf");
+        theme = MediaPlayer.create(context, R.raw.theme);
+        pop = MediaPlayer.create(context, R.raw.pop);
+        gametheme = MediaPlayer.create(context, R.raw.gametheme);
         thread = new MainThread(getHolder(), this);
 
         hero = new Hero(0, 900, this);
@@ -109,6 +120,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
 
             case 5:
+                gametheme.stop();
+                theme.start();
                 hero.goToFinal();
                 hero.setOnTravel();
                 isFinalStage = true;
@@ -164,10 +177,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (canvas != null) {
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
-            Paint text = new Paint();
-            text.setColor(Color.BLUE);
-            text.setTextSize(160);
-            canvas.drawText(score+"", 0, screenHeight-50, text);
+            if(LEVEL != 6) {
+                Paint text = new Paint();
+                text.setTypeface(tf);
+                text.setTextSize(160);
+                canvas.drawText(score + "", 0, screenHeight - 50, text);
+            }
 
             for(Cloud cloud : clouds) {
                 cloud.draw(canvas);
@@ -187,12 +202,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             if(gameTimer > 0){
                 Paint timer = new Paint();
+                timer.setTypeface(tf);
                 if(gameTimer == 3)
                     timer.setColor(Color.RED);
                 else if(gameTimer == 2)
                     timer.setColor(Color.YELLOW);
-                else
+                else {
                     timer.setColor(Color.GREEN);
+                    gametheme.start();
+                }
                 timer.setTextSize(300);
                 canvas.drawText(gameTimer+"", screenWidth/2, screenHeight/2, timer);
             }
@@ -247,6 +265,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     updateScore(50);
                 }
                 if(floater.ifExploded()){
+                    pop.start();
                     floatingObjectsFactory.getFloaters().remove(floater);
                 }
 

@@ -3,6 +3,7 @@ package com.games.ebocc.thehero.gameenv;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceView;
 
@@ -35,15 +36,20 @@ public class Hero extends GameEntities{
 
     private Rect targetTravel;
 
+    private MediaPlayer flap;
+
     public Hero(int left, int top, SurfaceView view) {
         super(left, top, view);
         collisionChecker = new CollisionChecker();
         targetTravel = null;
         this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
         isGoingRight = true;
+
+        flap = MediaPlayer.create(view.getContext(), R.raw.flap);
     }
 
     public void goUp(){
+        flap.start();
         isGoingUp = true;
         if (y > 0 && !isOnTravel) {
             y -= yVelocity;

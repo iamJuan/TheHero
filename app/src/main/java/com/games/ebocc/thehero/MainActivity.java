@@ -3,6 +3,7 @@ package com.games.ebocc.thehero;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;

@@ -3,6 +3,7 @@ package com.games.ebocc.thehero.balloons;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceView;
 
@@ -20,6 +21,8 @@ public class Enemy extends GameEntities{
     private SurfaceView view;
     private CollisionChecker collisionChecker;
     private List<Cloud> clouds;
+
+    private MediaPlayer cry;
 
     private boolean hasFallen = false;
     private boolean isGoingUp = false;
@@ -46,7 +49,8 @@ public class Enemy extends GameEntities{
         collisionChecker = new CollisionChecker();
         clouds = new ArrayList<>();
         targetTravel = initTravel(GO_UP);
-        this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
+        this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
+        cry = MediaPlayer.create(view.getContext(), R.raw.falcon);
     }
 
     public void move() {
@@ -205,26 +209,27 @@ public class Enemy extends GameEntities{
         flapEffectBooleans();
 
         if(isGoingUp){
+            cry.start();
             if(isGoingRight){
                 if(isImageUp) {
-                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidarightdown);
+                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyrightdown);
                 }else {
-                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaright);
+                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyright);
                 }
                 isImageUp = !isImageUp;
             }else{
                 if(isImageUp) {
-                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleft);
+                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleft);
                 }else {
-                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
+                    this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleftdown);
                 }
                 isImageUp = !isImageUp;
             }
         }else{
             if(isGoingRight)
-                this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidarightdown);
+                this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyrightdown);
             else
-                this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.bidaleftdown);
+                this.image = BitmapFactory.decodeResource(view.getResources(), R.drawable.enemyleftdown);
         }
     }
 }
