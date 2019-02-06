@@ -259,8 +259,8 @@ public class Hero extends GameEntities{
     }
 
     public void goToFinal() {
-        targetX = 100;
-        targetY = 100;
+        targetX = 50;
+        targetY = 50;
         Rect rectTravel = new Rect();
         rectTravel.set(targetX, targetY,targetX+100, targetY+100);
 

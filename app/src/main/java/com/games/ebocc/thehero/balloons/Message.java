@@ -10,7 +10,7 @@ import com.games.ebocc.thehero.gameenv.GameEntities;
 
 public class Message extends GameEntities{
 
-    private String message = "HiEmEm!WillumarryJohn?";
+    private String message = "Tuloy paba haha!I love you bebi!Will you marry me?";
     private int index;
     private boolean willShow = false;
     private Typeface tf;

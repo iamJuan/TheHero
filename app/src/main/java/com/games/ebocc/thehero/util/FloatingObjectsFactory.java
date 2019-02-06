@@ -41,9 +41,10 @@ public class FloatingObjectsFactory{
     }
 
     public void generate() {
-        Floater floater = new Floater(0, screenHeight, view);
+        Floater floater;
         if(ifBalloon){
             if(nBalloon < BALLOON_LIMIT){
+                floater = new Floater(0, screenHeight, view);
                 int bound;
 
                 if(nBalloon == 0){
@@ -95,146 +96,36 @@ public class FloatingObjectsFactory{
         }else{
 
             if(nHeart == 0){
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(100);
-                floater.setX(770);
-                floaters.add(floater);
+                for(int lim = 0; lim < 16; lim++){
+                    floater = new Floater(0, screenHeight, view);
+                    floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
+                    floater.setyLimit(400);
+                    floater.setX((65*(lim*2))+70);
+                    floaters.add(floater);
+                    nHeart++;
+                }
 
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(100);
-                floater.setX(970);
-                floaters.add(floater);
-                nHeart+=2;
-
-            }else if(nHeart == 2){
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(300);
-                floater.setX(770);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(300);
-                floater.setX(970);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(300);
-                floater.setX(1170);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(300);
-                floater.setX(1370);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(300);
-                floater.setX(1570);
-                floaters.add(floater);
-                nHeart+=4;
-            }else if(nHeart == 6){
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(500);
-                floater.setX(770);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(500);
-                floater.setX(970);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(500);
-                floater.setX(1170);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(500);
-                floater.setX(1370);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(500);
-                floater.setX(1670);
-                floaters.add(floater);
-                nHeart+=5;
-            }else if(nHeart == 11){
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(700);
-                floater.setX(770);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(700);
-                floater.setX(970);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(700);
-                floater.setX(1170);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(700);
-                floater.setX(1370);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(700);
-                floater.setX(1570);
-                floaters.add(floater);
-                nHeart+=5;
             }else if(nHeart == 16){
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(900);
-                floater.setX(770);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(900);
-                floater.setX(970);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(900);
-                floater.setX(1170);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(900);
-                floater.setX(1370);
-                floaters.add(floater);
-
-                floater = new Floater(0, screenHeight, view);
-                floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
-                floater.setyLimit(900);
-                floater.setX(1570);
-                floaters.add(floater);
-                nHeart+=5;
-            }else if(nHeart >= 21){
+                for(int lim = 0; lim < 16; lim++){
+                    floater = new Floater(0, screenHeight, view);
+                    floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
+                    floater.setyLimit(600);
+                    floater.setX((65*(lim*2))+70);
+                    floaters.add(floater);
+                    nHeart++;
+                }
+            }else if(nHeart == 32){
+                for(int lim = 0; lim < 18; lim++){
+                    floater = new Floater(0, screenHeight, view);
+                    floater.setImage(BitmapFactory.decodeResource(view.getResources(), R.drawable.heart));
+                    floater.setyLimit(800);
+                    floater.setX((65*(lim*2))+70);
+                    floaters.add(floater);
+                    nHeart++;
+                }
+            }else if(nHeart >= 50){
                 if(!shouldGoToNextLevel) {
-                    if (floaters.get(nHeart).getRect().top <= 920) {
+                    if (floaters.get(nHeart-1).getRect().top <= 920) {
                         shouldGoToNextLevel = true;
                     }
                 }

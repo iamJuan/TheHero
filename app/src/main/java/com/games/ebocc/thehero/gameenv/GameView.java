@@ -45,7 +45,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private boolean isGameStarted = false;
     private boolean isFinalStage = false;
 
-    private int msgDelay = 20;
+    private int msgDelay = 10;
 
     private Typeface tf;
     private MediaPlayer theme;
@@ -295,7 +295,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 charFactory.getMessages().get(popBalloon).appear(true);
                 floatingObjectsFactory.getFloaters().remove(0);
                 popBalloon++;
-                msgDelay = 30;
+                msgDelay = 10;
             }
         }
     }
